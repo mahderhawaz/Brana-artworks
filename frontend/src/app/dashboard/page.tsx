@@ -8,6 +8,7 @@ import DashboardSidebar from "../../components/DashboardSidebar";
 import ThemeToggle from "../../components/ThemeToggle";
 import MobileNav from "../../components/MobileNav";
 import DefaultAvatar from "../../components/DefaultAvatar";
+import PageTransition from "../../components/PageTransition";
 import { api, User, Artwork } from "../../lib/api";
 
 const stats = [
@@ -84,9 +85,10 @@ export default function DashboardPage() {
         <meta name="viewport" content="width=device-width,initial-scale=1" />
       </Head>
 
-      <div className="page">
-        <DashboardSidebar activePage="dashboard" />
-        <div className="contentArea">
+      <PageTransition>
+        <div className="page">
+          <DashboardSidebar activePage="dashboard" />
+          <div className="contentArea">
           <header className="topnav" role="banner">
             <div className="brand"></div>
             <nav className="centerlinks" aria-label="Main">
@@ -179,8 +181,9 @@ export default function DashboardPage() {
               )}
             </section>
           </main>
+          </div>
         </div>
-      </div>
+      </PageTransition>
 
       <style jsx global>{`
         body {

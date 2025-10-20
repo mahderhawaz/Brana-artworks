@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface SidebarProps {
   activePage?: string;
@@ -16,35 +17,35 @@ const DashboardSidebar: React.FC<SidebarProps> = ({ activePage = "Home" }) => {
       </div>
 
       <nav className="nav" aria-label="Main">
-        <a className={`item ${activePage === "dashboard" || activePage === "Home" ? "active" : ""}`} href="/dashboard">
+        <Link className={`item ${activePage === "dashboard" || activePage === "Home" ? "active" : ""}`} href="/dashboard">
           <span className="icon">🏠</span>
           <span>Home</span>
-        </a>
+        </Link>
 
-        <a className={`item ${activePage === "my-artworks" ? "active" : ""}`} href="/my-artworks">
+        <Link className={`item ${activePage === "my-artworks" ? "active" : ""}`} href="/my-artworks">
           <span className="icon">🖼️</span>
           <span>My Artworks</span>
-        </a>
+        </Link>
 
-        <a className={`item ${activePage === "upload-artwork" ? "active" : ""}`} href="/upload-artwork">
+        <Link className={`item ${activePage === "upload-artwork" ? "active" : ""}`} href="/upload-artwork">
           <span className="icon">➕</span>
           <span>Upload Artwork</span>
-        </a>
+        </Link>
 
-        <a className={`item ${activePage === "sales" ? "active" : ""}`} href="/sales">
+        <Link className={`item ${activePage === "sales" ? "active" : ""}`} href="/sales">
           <span className="icon">💵</span>
           <span>Sales</span>
-        </a>
+        </Link>
 
-        <a className={`item ${activePage === "purchases" ? "active" : ""}`} href="/purchases">
+        <Link className={`item ${activePage === "purchases" ? "active" : ""}`} href="/purchases">
           <span className="icon">🛒</span>
           <span>Purchases</span>
-        </a>
+        </Link>
       </nav>
 
       <div className="bottom">
-        <a className={`smallItem ${activePage === "profile" ? "active" : ""}`} href="/profile"><span className="icon">👤</span> Profile</a>
-        <a className={`smallItem ${activePage === "settings" ? "active" : ""}`} href="/settings"><span className="icon">⚙️</span> Settings</a>
+        <Link className={`smallItem ${activePage === "profile" ? "active" : ""}`} href="/profile"><span className="icon">👤</span> Profile</Link>
+        <Link className={`smallItem ${activePage === "settings" ? "active" : ""}`} href="/settings"><span className="icon">⚙️</span> Settings</Link>
       </div>
 
       <style jsx global>{`
