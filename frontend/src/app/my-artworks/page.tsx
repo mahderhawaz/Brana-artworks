@@ -217,31 +217,7 @@ export default function MyArtworksPage() {
           ))
           )}
 
-          {!loading && (
-          <nav className="pagination" aria-label="Pagination">
-            <button className="pageBtn" onClick={() => goto(page - 1)} aria-label="Previous page">
-              ‹
-            </button>
 
-            <button className={`pageNum ${page === 1 ? "active" : ""}`} onClick={() => goto(1)}>
-              1
-            </button>
-            <button className="pageNum" onClick={() => goto(2)}>
-              2
-            </button>
-            <button className="pageNum" onClick={() => goto(3)}>
-              3
-            </button>
-            <span className="dots">…</span>
-            <button className="pageNum" onClick={() => goto(totalPages)}>
-              {totalPages}
-            </button>
-
-            <button className="pageBtn" onClick={() => goto(page + 1)} aria-label="Next page">
-              ›
-            </button>
-          </nav>
-          )}
         </main>
           </div>
         </div>
