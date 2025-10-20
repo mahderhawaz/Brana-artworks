@@ -208,10 +208,7 @@ export default function MyArtworksPage() {
                     </article>
                   ))}
                 </div>
-                <button className="scrollBtn right" onClick={() => {
-                  const container = document.querySelectorAll('.artworkGrid')[rowIndex];
-                  container.scrollBy({ left: 250, behavior: 'smooth' });
-                }}>›</button>
+
               </div>
             </section>
           ))
