@@ -188,24 +188,27 @@ export default function MyArtworksPage() {
               <div className="scrollContainer">
                 <div className="artworkGrid">
                   {row.map((a) => (
-                    <article className="card" key={a.title}>
-                      <div className="media">
-                        {a.src && a.src.startsWith('data:') ? (
-                          <img src={a.src} alt={a.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                        ) : (
-                          <Image src={a.src || "/placeholder.svg"} alt={a.title} fill style={{ objectFit: "cover" }} />
-                        )}
-                      </div>
-                      <div className="overlay">
-                        <div className="meta">
-                          <div className="title">{a.title}</div>
-                          <div className="bottomRow">
-                            <div className={`price ${a.status === "Sold" ? "sold" : "available"}`}>{a.price}</div>
-                            <div className={`status ${a.status === "Sold" ? "statusSold" : "statusAvail"}`}>{a.status}</div>
+                    <div className="cardContainer" key={a.title}>
+                      <article className="card">
+                        <div className="media">
+                          {a.src && a.src.startsWith('data:') ? (
+                            <img src={a.src} alt={a.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          ) : (
+                            <Image src={a.src || "/placeholder.svg"} alt={a.title} fill style={{ objectFit: "cover" }} />
+                          )}
+                        </div>
+                        <div className="overlay">
+                          <div className="meta">
+                            <div className="title">{a.title}</div>
+                            <div className="bottomRow">
+                              <div className={`price ${a.status === "Sold" ? "sold" : "available"}`}>{a.price}</div>
+                              <div className={`status ${a.status === "Sold" ? "statusSold" : "statusAvail"}`}>{a.status}</div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </article>
+                      </article>
+                      <button className="viewBtn">›</button>
+                    </div>
                   ))}
                 </div>
 
@@ -452,12 +455,36 @@ export default function MyArtworksPage() {
           box-shadow: var(--card-shadow-hover);
           transform: translateY(-4px);
         }
+        
+        :root.dark .viewBtn {
+          background: rgba(166, 91, 43, 0.9) !important;
+          color: white !important;
+        }
 
         .media{
           position: relative;
           width: 100%;
           height: 200px;
           background: #f0ebe5;
+        }
+        
+        .cardContainer {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        
+        .viewBtn {
+          background: rgba(166, 91, 43, 0.9);
+          color: white !important;
+          border: none;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          font-size: 18px;
+          font-weight: bold;
+          cursor: pointer;
+          flex-shrink: 0;
         }
 
         .scrollBtn{
