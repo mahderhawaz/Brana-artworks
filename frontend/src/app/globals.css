@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Smooth page transitions */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Prevent layout shift during image loading */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Smooth transitions for navigation */
+a {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Loading state for images */
+img[data-loading="true"] {
+  opacity: 0;
+}
+
+img[data-loading="false"] {
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Prevent content flash during page transitions */
+body {
+  overflow-x: hidden;
+}
+
+/* Ensure images don't cause layout shift */
+img {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Force footer styling */
+footer {
+  background: #5a2f15 !important;
+  color: #f9efe8 !important;
+}
+
+footer * {
+  color: #f9efe8 !important;
+}
+
+footer a {
+  color: #f9efe8 !important;
+}
+
+footer h1, footer h2, footer h3, footer h4, footer h5, footer h6 {
+  color: #f9efe8 !important;
+}
+
+footer p, footer span, footer div, footer li {
+  color: rgba(255, 255, 255, 0.86) !important;
+}

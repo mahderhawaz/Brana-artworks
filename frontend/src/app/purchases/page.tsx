@@ -1,0 +1,326 @@
+'use client';
+
+import Head from "next/head";
+import Image from "next/image";
+import React, { useMemo, useState, useEffect } from "react";
+import DashboardSidebar from "../../components/DashboardSidebar";
+import { api, User } from "../../lib/api";
+
+type Purchase = {
+  id: number;
+  artwork: string;
+  thumb: string;
+  details: string;
+  price: string;
+  seller: string;
+  date: string;
+};
+
+const ALL_PURCHASES: Purchase[] = [
+  { id: 1, artwork: "Ancient Echoes", thumb: "/cards/paint.jpg", details: "Mixed Media", price: "Birr 1,200", seller: "Abebe Kebede", date: "2023-01-15" },
+  { id: 2, artwork: "Oromo Heritage", thumb: "/cards/pottery 1.jpg", details: "Oil on Canvas", price: "Birr 800", seller: "Selam Tesfaye", date: "2023-02-20" },
+  { id: 3, artwork: "Gondar Castle", thumb: "/cards/basket.jpg", details: "Watercolor", price: "Birr 2,500", seller: "Tigist Mekonnen", date: "2023-03-10" },
+  { id: 4, artwork: "Lalibela's Cross", thumb: "/cards/tibeb 2.jpg", details: "Acrylic", price: "Birr 500", seller: "Mulugeta Alemayehu", date: "2023-04-05" },
+  { id: 5, artwork: "Axum Obelisk", thumb: "/assets/hero1.jpg", details: "Digital Art", price: "Birr 750", seller: "Yonas Hailu", date: "2023-05-12" },
+];
+
+export default function PurchasesPage() {
+  const [query, setQuery] = useState("");
+  const [page, setPage] = useState(1);
+  const [user, setUser] = useState<User | null>(null);
+  const pageSize = 5;
+  const total = ALL_PURCHASES.length;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+
+  useEffect(() => {
+    loadUserProfile();
+  }, []);
+
+  async function loadUserProfile() {
+    try {
+      const userData = await api.getProfile();
+      setUser(userData);
+    } catch (error) {
+      console.error('Failed to load user profile:', error);
+    }
+  }
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return ALL_PURCHASES;
+    return ALL_PURCHASES.filter(
+      (p) =>
+        p.artwork.toLowerCase().includes(q) ||
+        p.seller.toLowerCase().includes(q) ||
+        p.date.toLowerCase().includes(q) ||
+        p.details.toLowerCase().includes(q)
+    );
+  }, [query]);
+
+  const pageItems = filtered.slice((page - 1) * pageSize, page * pageSize);
+
+  function goto(p: number) {
+    if (p < 1 || p > totalPages) return;
+    setPage(p);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function exportCSV() {
+    const rows = [["Artwork", "Details", "Price", "Seller", "Date"], ...filtered.map((r) => [r.artwork, r.details, r.price, r.seller, r.date])];
+    const csv = rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `purchases_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  return (
+    <>
+      <Head>
+        <title>Purchases — BRANA Arts</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
+
+      <div className="page">
+        <DashboardSidebar activePage="purchases" />
+        <div className="contentArea">
+        <header className="topnav" role="banner">
+          <div className="brand">
+          </div>
+
+          <nav className="centerlinks" aria-label="Main">
+            <a href="/">Home</a>
+            <a href="/collections">Explore</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/my-artworks">My Artworks</a>
+          </nav>
+
+          <div className="right">
+            <button className="iconBtn" aria-label="Notifications">🔔</button>
+            <div className="avatar">
+              <Image 
+                src={user?.profilePicture || "/assets/hanna.jpg"} 
+                alt="User" 
+                width={36} 
+                height={36} 
+              />
+            </div>
+          </div>
+        </header>
+
+        <main className="main" role="main">
+          <div className="headerRow">
+            <div>
+              <h1>Purchases</h1>
+              <p className="subtitle">A history of all the artworks you've acquired.</p>
+            </div>
+
+            <div className="controls">
+              <button className="exportBtn" onClick={exportCSV} aria-label="Export purchases">Export Data ⤓</button>
+            </div>
+          </div>
+
+          <div className="searchRow" role="search">
+            <input
+              className="search"
+              placeholder="Search artwork, seller or date..."
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setPage(1);
+              }}
+              aria-label="Search purchases"
+            />
+          </div>
+
+          <section className="tableWrap" aria-labelledby="purchases-heading">
+            <h2 id="purchases-heading" className="srOnly">Purchases list</h2>
+
+            <div className="tableHead" role="rowgroup">
+              <div className="row head" role="row">
+                <div className="cell artworkHead">Artwork</div>
+                <div className="cell">Details</div>
+                <div className="cell">Price</div>
+                <div className="cell">Seller</div>
+                <div className="cell">Date</div>
+                <div className="cell actionCol" aria-hidden />
+              </div>
+            </div>
+
+            <div className="tableBody" role="rowgroup">
+              {pageItems.length === 0 ? (
+                <div className="row empty" role="row">
+                  <div className="cell" style={{ gridColumn: "1 / -1", padding: 24, textAlign: "center" }}>
+                    No purchases found.
+                  </div>
+                </div>
+              ) : (
+                pageItems.map((p) => (
+                  <div className="row" role="row" key={p.id}>
+                    <div className="cell artworkCell">
+                      <div className="thumb">
+                        <Image src={p.thumb} alt={p.artwork} width={56} height={56} />
+                      </div>
+                      <div className="artworkLabel">{p.artwork}</div>
+                    </div>
+
+                    <div className="cell">
+                      <div className="detailTitle">{p.details}</div>
+                    </div>
+
+                    <div className="cell">{p.price}</div>
+
+                    <div className="cell">{p.seller}</div>
+
+                    <div className="cell">{p.date}</div>
+
+                    <div className="cell actionCol">
+                      <a className="detailsLink" href="#" aria-label={`View details for ${p.artwork}`}>View Details</a>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </section>
+
+          <div className="summary">
+            Showing {filtered.length === 0 ? 0 : (page - 1) * pageSize + 1} to {Math.min(page * pageSize, filtered.length)} of {filtered.length} results
+          </div>
+
+          <nav className="pagination" aria-label="Pagination">
+            <button className="pgBtn" onClick={() => goto(page - 1)} disabled={page === 1}>Previous</button>
+
+            {[...Array(totalPages)].map((_, i) => {
+              const p = i + 1;
+              return (
+                <button
+                  key={p}
+                  className={`pgNum ${p === page ? "active" : ""}`}
+                  onClick={() => goto(p)}
+                  aria-current={p === page ? "page" : undefined}
+                >
+                  {p}
+                </button>
+              );
+            })}
+
+            <button className="pgBtn" onClick={() => goto(page + 1)} disabled={page === totalPages}>Next</button>
+          </nav>
+        </main>
+        </div>
+      </div>
+
+      <style jsx>{`
+        :root {
+          --page-bg: #fbfaf8;
+          --muted: #6b625d;
+          --accent: #a65b2b;
+          --head-bg: #f0e8e2;
+          --soft: rgba(0,0,0,0.06);
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial; background: var(--page-bg); color: #a65b2b !important; }
+        * { color: #a65b2b !important; }
+        .page { display: flex; min-height: 100vh; }
+        .contentArea { flex: 1; display: flex; flex-direction: column; }
+
+        .topnav {
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          padding: 14px 28px;
+          border-bottom: 1px solid rgba(0,0,0,0.06);
+          background: #fff;
+          position: sticky;
+          top: 0;
+          z-index: 20;
+        }
+        .brand{ display:flex; align-items:center; gap:12px; }
+        .logo{ border-radius: 50%; object-fit: cover; }
+        .centerlinks { display:flex; gap:20px; }
+        .centerlinks a { color:#a65b2b !important; text-decoration:none; font-weight:600; }
+        .centerlinks a:hover { text-decoration:underline; }
+
+        .right{ display:flex; align-items:center; gap:12px; }
+        .iconBtn{
+          background:transparent;
+          border:none;
+          font-size:18px;
+          cursor:pointer;
+        }
+        .avatar{ border-radius:999px; overflow:hidden; }
+        .avatar img { border-radius: 50%; object-fit: cover; }
+
+        .main { max-width: 1100px; margin: 28px auto; padding: 0 20px 80px; }
+
+        .headerRow { display:flex; justify-content:space-between; align-items:center; margin-bottom: 18px; }
+        h1 { font-family: "Playfair Display", serif; font-size: 36px; margin: 0; color: #a65b2b !important; }
+        .subtitle { margin: 6px 0 0; color: var(--muted); }
+
+        .controls { display:flex; gap:12px; align-items:center; }
+        .exportBtn {
+          background: var(--accent);
+          color: #fff !important;
+          border: none;
+          padding: 10px 14px;
+          border-radius: 8px;
+          font-weight: 700;
+          cursor: pointer;
+          box-shadow: 0 6px 18px rgba(166,91,43,0.12);
+        }
+
+        .searchRow { margin: 18px 0; }
+        .search {
+          width: 100%;
+          padding: 12px 14px;
+          border-radius: 10px;
+          border: 1px solid var(--soft);
+          background: #fff;
+          outline: none;
+        }
+
+        .tableWrap { margin-top: 12px; border-radius: 10px; overflow: hidden; border: 1px solid rgba(0,0,0,0.04); background: #fff; }
+        .tableHead .row.head { display:grid; grid-template-columns: 2fr 1fr 1fr 1.2fr 1fr 0.7fr; gap:0; padding: 12px 16px; background: var(--head-bg); color: var(--muted); font-weight:700; align-items:center; }
+        .tableBody .row { display:grid; grid-template-columns: 2fr 1fr 1fr 1.2fr 1fr 0.7fr; gap:0; align-items:center; padding: 14px 16px; border-top: 1px solid rgba(0,0,0,0.03); }
+
+        .cell { padding: 0 12px; display:flex; align-items:center; gap:12px; color: #a65b2b !important; }
+        .artworkCell { display:flex; align-items:center; gap:12px; }
+        .thumb { width:56px; height:56px; border-radius:8px; overflow:hidden; background:#efece9; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+        .artworkLabel { font-weight:700; color: #a65b2b !important; }
+
+        .detailTitle { color: var(--muted); font-weight:600; }
+
+        .detailsLink { color: var(--accent); text-decoration:none; font-weight:600; }
+        .detailsLink:hover { text-decoration:underline; }
+
+        .summary { color: var(--muted); margin-top: 12px; }
+
+        .pagination { display:flex; gap:8px; align-items:center; justify-content:flex-end; margin-top:16px; }
+        .pgBtn, .pgNum { padding:8px 12px; border-radius:8px; border:1px solid var(--soft); background: #fff; cursor:pointer; color: var(--muted); }
+        .pgNum.active { background: var(--accent); color:#fff; border-color: transparent; box-shadow: 0 6px 18px rgba(166,91,43,0.12); }
+
+        /* Accessibility helper */
+        .srOnly { position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden; }
+
+        /* responsive */
+        @media (max-width: 900px) {
+          .tableHead .row.head, .tableBody .row { grid-template-columns: 1.8fr 1fr 1fr 1fr 1fr 0.8fr; }
+        }
+        @media (max-width: 640px) {
+          .tableHead .row.head { display:none; }
+          .tableBody .row {
+            display:block;
+            padding:12px 14px;
+          }
+          .row .cell { display:block; padding:6px 0; gap:8px; }
+          .artworkCell { flex-direction:row; }
+          .pagination { justify-content:center; }
+          .headerRow { flex-direction:column; align-items:flex-start; gap:12px; }
+        }
+      `}</style>
+    </>
+  );
+}
