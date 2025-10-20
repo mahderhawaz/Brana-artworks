@@ -1,6 +1,9 @@
+'use client';
+
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from 'next/navigation';
 
 const SocialIcon = ({ name }: { name: "twitter" | "instagram" | "facebook" }) => {
   const commonProps = { width: 18, height: 18, "aria-hidden": true } as const;
@@ -29,6 +32,21 @@ const SocialIcon = ({ name }: { name: "twitter" | "instagram" | "facebook" }) =>
 };
 
 const Footer: React.FC = () => {
+  const pathname = usePathname();
+  
+  // Don't show footer on dashboard pages
+  const isDashboardPage = pathname?.startsWith('/dashboard') || 
+                         pathname?.startsWith('/my-artworks') || 
+                         pathname?.startsWith('/profile') || 
+                         pathname?.startsWith('/purchases') || 
+                         pathname?.startsWith('/sales') || 
+                         pathname?.startsWith('/settings') || 
+                         pathname?.startsWith('/upload-artwork');
+  
+  if (isDashboardPage) {
+    return null;
+  }
+  
   return (
     <footer style={{backgroundColor: '#a65b2b', color: '#f9efe8'}} className="border-t-2 border-amber-600" role="contentinfo" aria-label="Site footer">
       {/* Main Footer Content */}
@@ -119,6 +137,8 @@ const Footer: React.FC = () => {
           </p>
         </div>
       </div>
+      
+
     </footer>
   );
 };
