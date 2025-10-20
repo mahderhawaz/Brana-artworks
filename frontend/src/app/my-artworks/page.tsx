@@ -5,6 +5,7 @@ import Image from "next/image"
 import { useState, useEffect } from "react"
 import DashboardSidebar from "../../components/DashboardSidebar"
 import ThemeToggle from "../../components/ThemeToggle"
+import DefaultAvatar from "../../components/DefaultAvatar"
 import { api, Artwork, User } from "../../lib/api"
 
 /**
@@ -148,12 +149,17 @@ export default function MyArtworksPage() {
               🔔
             </button>
             <div className="avatar">
-              <Image 
-                src={user?.profilePicture || "/assets/hanna.jpg"} 
-                alt="User" 
-                width={36} 
-                height={36} 
-              />
+              {user?.profilePicture ? (
+                <Image 
+                  src={user.profilePicture} 
+                  alt="User" 
+                  width={36} 
+                  height={36} 
+                  style={{ borderRadius: '50%', objectFit: 'cover' }}
+                />
+              ) : (
+                <DefaultAvatar size={36} />
+              )}
             </div>
           </div>
         </header>

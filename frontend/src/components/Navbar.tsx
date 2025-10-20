@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useEffect, useState } from 'react';
 import { api, User } from '../lib/api';
 import ThemeToggle from './ThemeToggle';
+import DefaultAvatar from './DefaultAvatar';
 import styles from './Navbar.module.css';
 
 const Navbar: React.FC = () => {
@@ -53,6 +54,18 @@ const Navbar: React.FC = () => {
           <ThemeToggle />
           {user ? (
             <>
+              <button className="text-white text-lg" aria-label="Notifications">🔔</button>
+              {user.profilePicture ? (
+                <Image 
+                  src={user.profilePicture} 
+                  alt="User avatar" 
+                  width={36} 
+                  height={36} 
+                  className="rounded-full object-cover"
+                />
+              ) : (
+                <DefaultAvatar size={36} />
+              )}
               <span className="welcome-text text-xs lg:text-sm">Welcome, {user.username}</span>
               <Link href="/dashboard" className="btn primary text-xs lg:text-sm px-2 lg:px-3 py-1 lg:py-2">Dashboard</Link>
               <button onClick={handleLogout} className="btn ghost text-xs lg:text-sm px-2 lg:px-3 py-1 lg:py-2">
@@ -95,7 +108,20 @@ const Navbar: React.FC = () => {
               </div>
               {user ? (
                 <>
-                  <span className="block text-white/80 text-sm">Welcome, {user.username}</span>
+                  <div className="flex items-center justify-center space-x-3 mb-3">
+                    {user.profilePicture ? (
+                      <Image 
+                        src={user.profilePicture} 
+                        alt="User avatar" 
+                        width={32} 
+                        height={32} 
+                        className="rounded-full object-cover"
+                      />
+                    ) : (
+                      <DefaultAvatar size={32} />
+                    )}
+                    <span className="text-white/80 text-sm">Welcome, {user.username}</span>
+                  </div>
                   <Link href="/dashboard" className="block bg-amber-600 text-white text-center py-2 px-4 rounded hover:bg-amber-700" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
                   <button onClick={() => {handleLogout(); setIsMenuOpen(false);}} className="block w-full text-left text-white hover:text-gray-300 py-2">
                     Log Out

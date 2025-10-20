@@ -5,6 +5,7 @@ import Image from "next/image";
 import React, { useState, useRef, useEffect } from "react";
 import DashboardSidebar from "../../components/DashboardSidebar";
 import ThemeToggle from "../../components/ThemeToggle";
+import DefaultAvatar from "../../components/DefaultAvatar";
 import { api, User } from "../../lib/api";
 
 export default function SettingsPage() {
@@ -117,12 +118,17 @@ export default function SettingsPage() {
           <ThemeToggle />
           <button className="iconBtn" aria-label="Notifications">🔔</button>
           <div className="avatar">
-            <Image 
-              src={user?.profilePicture || "/assets/hanna.jpg"} 
-              alt="User" 
-              width={36} 
-              height={36} 
-            />
+            {user?.profilePicture ? (
+              <Image 
+                src={user.profilePicture} 
+                alt="User" 
+                width={36} 
+                height={36} 
+                style={{ borderRadius: '50%', objectFit: 'cover' }}
+              />
+            ) : (
+              <DefaultAvatar size={36} />
+            )}
           </div>
         </div>
       </header>

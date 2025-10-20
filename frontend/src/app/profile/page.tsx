@@ -5,6 +5,7 @@ import Image from "next/image";
 import React, { useRef, useState, useEffect } from "react";
 import DashboardSidebar from "../../components/DashboardSidebar";
 import ThemeToggle from "../../components/ThemeToggle";
+import DefaultAvatar from "../../components/DefaultAvatar";
 import { api, User } from "../../lib/api";
 
 export default function ProfileSettingsPage() {
@@ -138,12 +139,17 @@ export default function ProfileSettingsPage() {
           <ThemeToggle />
           <button className="iconBtn" aria-label="Notifications">🔔</button>
           <div className="avatarWrap">
-            <Image 
-              src={user?.profilePicture || "/assets/hanna.jpg"} 
-              alt="User avatar" 
-              width={36} 
-              height={36} 
-            />
+            {user?.profilePicture ? (
+              <Image 
+                src={user.profilePicture} 
+                alt="User avatar" 
+                width={36} 
+                height={36} 
+                style={{ borderRadius: '50%', objectFit: 'cover' }}
+              />
+            ) : (
+              <DefaultAvatar size={36} />
+            )}
           </div>
         </div>
       </header>
@@ -172,7 +178,7 @@ export default function ProfileSettingsPage() {
                   ) : user?.profilePicture ? (
                     <img src={user.profilePicture} alt="Current avatar" style={{ width: '96px', height: '96px', objectFit: 'cover', borderRadius: '50%' }} />
                   ) : (
-                    <Image src="/assets/hanna.jpg" alt="Default avatar" width={96} height={96} style={{ borderRadius: '50%', objectFit: 'cover' }} />
+                    <DefaultAvatar size={96} />
                   )}
                 </div>
 

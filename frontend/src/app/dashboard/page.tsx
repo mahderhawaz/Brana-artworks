@@ -7,6 +7,7 @@ import Link from "next/link";
 import DashboardSidebar from "../../components/DashboardSidebar";
 import ThemeToggle from "../../components/ThemeToggle";
 import MobileNav from "../../components/MobileNav";
+import DefaultAvatar from "../../components/DefaultAvatar";
 import { api, User, Artwork } from "../../lib/api";
 
 const stats = [
@@ -99,12 +100,17 @@ export default function DashboardPage() {
               <MobileNav isDashboard={true} />
               <button className="iconBtn" aria-label="Notifications">🔔</button>
               <div className="avatar">
-                <Image 
-                  src={user?.profilePicture || "/assets/hanna.jpg"} 
-                  alt="User" 
-                  width={36} 
-                  height={36} 
-                />
+                {user?.profilePicture ? (
+                  <Image 
+                    src={user.profilePicture} 
+                    alt="User" 
+                    width={36} 
+                    height={36} 
+                    style={{ borderRadius: '50%', objectFit: 'cover' }}
+                  />
+                ) : (
+                  <DefaultAvatar size={36} />
+                )}
               </div>
             </div>
           </header>
