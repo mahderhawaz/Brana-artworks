@@ -135,9 +135,6 @@ export default function DashboardPage() {
                   <div className="headerRow">
                     <h3 className="sectionTitle">My Recent Artworks</h3>
                     <div className="actionButtons">
-                      <Link href="/my-artworks" className="viewAll">
-                        Click Here to View My Artworks
-                      </Link>
                       <a href="/upload-artwork" className="upload">+ Upload New Artwork</a>
                     </div>
                   </div>
