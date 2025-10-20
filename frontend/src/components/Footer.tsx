@@ -34,7 +34,7 @@ const SocialIcon = ({ name }: { name: "twitter" | "instagram" | "facebook" }) =>
 const Footer: React.FC = () => {
   const pathname = usePathname();
   
-  // Don't show footer on dashboard pages
+  // Don't show footer on dashboard pages only
   const isDashboardPage = pathname?.startsWith('/dashboard') || 
                          pathname?.startsWith('/my-artworks') || 
                          pathname?.startsWith('/profile') || 
@@ -43,15 +43,18 @@ const Footer: React.FC = () => {
                          pathname?.startsWith('/settings') || 
                          pathname?.startsWith('/upload-artwork');
   
+  // New Arrivals should show footer (it's a public page)
+  
   if (isDashboardPage) {
     return null;
   }
   
   return (
-    <footer style={{backgroundColor: '#a65b2b', color: '#f9efe8'}} className="border-t-2 border-amber-600" role="contentinfo" aria-label="Site footer">
+    <>
+      <footer style={{backgroundColor: '#a65b2b', color: '#f9efe8'}} className="border-t-2 border-amber-600" role="contentinfo" aria-label="Site footer">
       {/* Main Footer Content */}
-      <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8" style={{ paddingTop: '5px', paddingBottom: '100px' }}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-8 lg:gap-12" style={{ marginTop: '50px' }}>
+      <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8" style={{ paddingTop: '5px', paddingBottom: '60px' }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-8 lg:gap-12" style={{ marginTop: '20px' }}>
           
           {/* Logo & Brand - Takes 2 columns on XL screens */}
           <div className="xl:col-span-2 flex flex-col items-center space-y-4 ml-0 md:ml-48 lg:ml-52">
@@ -137,9 +140,70 @@ const Footer: React.FC = () => {
           </p>
         </div>
       </div>
+      </footer>
       
-
-    </footer>
+      <style jsx global>{`
+        footer {
+          background-color: #a65b2b !important;
+          color: #f9efe8 !important;
+          padding: 32px 20px !important;
+          min-height: auto !important;
+        }
+        
+        footer .max-w-full {
+          max-width: 1200px !important;
+        }
+        
+        footer .grid {
+          display: grid !important;
+          grid-template-columns: repeat(1, 1fr) !important;
+        }
+        
+        @media (min-width: 768px) {
+          footer .grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+        }
+        
+        @media (min-width: 1024px) {
+          footer .grid {
+            grid-template-columns: repeat(4, 1fr) !important;
+          }
+        }
+        
+        @media (min-width: 1280px) {
+          footer .grid {
+            grid-template-columns: repeat(5, 1fr) !important;
+          }
+        }
+        
+        footer * {
+          color: #f9efe8 !important;
+        }
+        
+        footer h3, footer h4 {
+          color: #f9efe8 !important;
+          font-family: "Playfair Display", serif !important;
+        }
+        
+        footer a {
+          color: #f9efe8 !important;
+          text-decoration: none !important;
+        }
+        
+        footer a:hover {
+          color: rgba(249, 239, 232, 0.8) !important;
+        }
+        
+        footer p {
+          color: #f9efe8 !important;
+        }
+        
+        footer .border-t {
+          border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
+        }
+      `}</style>
+    </>
   );
 };
 
