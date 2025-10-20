@@ -122,32 +122,27 @@ export default function DashboardPage() {
               <h1>Dashboard Overview</h1>
               <p className="subtitle">Welcome to your artist dashboard</p>
             </div>
-            <DashboardStats />
-
-            <section className="artSection" aria-label="My Recent Artworks">
-              <div className="headerRow">
-                <h3 className="sectionTitle">My Recent Artworks</h3>
-                <div className="actionButtons">
-                  <Link href="/my-artworks" className="viewAll">
-                    Click Here to View My Artworks
-                  </Link>
-                  <a href="/upload-artwork" className="upload">+ Upload New Artwork</a>
-                </div>
+            {loading ? (
+              <div className="loadingState">
+                <div className="spinner"></div>
+                <p>Loading dashboard...</p>
               </div>
+            ) : (
+              <>
+                <DashboardStats />
 
-              {loading ? (
-                <div className="loadingGrid">
-                  {[1, 2, 3, 4].map(i => (
-                    <div key={i} className="loadingCard">
-                      <div className="loadingImage"></div>
-                      <div className="loadingText">
-                        <div className="loadingLine"></div>
-                        <div className="loadingLine short"></div>
-                      </div>
+                <section className="artSection" aria-label="My Recent Artworks">
+                  <div className="headerRow">
+                    <h3 className="sectionTitle">My Recent Artworks</h3>
+                    <div className="actionButtons">
+                      <Link href="/my-artworks" className="viewAll">
+                        Click Here to View My Artworks
+                      </Link>
+                      <a href="/upload-artwork" className="upload">+ Upload New Artwork</a>
                     </div>
-                  ))}
-                </div>
-              ) : recentArtworks.length > 0 ? (
+                  </div>
+
+                  {recentArtworks.length > 0 ? (
                 <div className="grid">
                   {recentArtworks.map((artwork) => (
                     <article key={artwork._id} className="artCard">
@@ -172,14 +167,16 @@ export default function DashboardPage() {
                     </article>
                   ))}
                 </div>
-              ) : (
-                <div className="grid">
-                  {demoArt.map((art) => (
-                    <ArtCard key={art.title} {...art} />
-                  ))}
-                </div>
-              )}
-            </section>
+                  ) : (
+                    <div className="grid">
+                      {demoArt.map((art) => (
+                        <ArtCard key={art.title} {...art} />
+                      ))}
+                    </div>
+                  )}
+                </section>
+              </>
+            )}
           </main>
           </div>
         </div>
@@ -501,60 +498,43 @@ export default function DashboardPage() {
           color: white !important;
         }
         
-        .loadingGrid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 18px;
-          margin-top: 12px;
+        .loadingState {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 80px 20px;
+          text-align: center;
         }
         
-        .loadingCard {
-          background: #fff;
-          border-radius: 12px;
-          overflow: hidden;
-          box-shadow: 0 10px 28px rgba(0, 0, 0, 0.06);
+        .spinner {
+          width: 40px;
+          height: 40px;
+          border: 3px solid #f3f1ef;
+          border-top: 3px solid #a65b2b;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+          margin-bottom: 20px;
         }
         
-        :root.dark .loadingCard {
-          background: #4a3319 !important;
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
         }
         
-        .loadingImage {
-          height: 170px;
-          background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-          background-size: 200% 100%;
-          animation: loading 1.5s infinite;
+        .loadingState p {
+          color: #a65b2b;
+          font-size: 16px;
+          margin: 0;
         }
         
-        :root.dark .loadingImage {
-          background: linear-gradient(90deg, #3d2914 25%, #2d1f0f 50%, #3d2914 75%) !important;
+        :root.dark .loadingState p {
+          color: white !important;
         }
         
-        .loadingText {
-          padding: 12px 14px 16px;
-        }
-        
-        .loadingLine {
-          height: 16px;
-          background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-          background-size: 200% 100%;
-          animation: loading 1.5s infinite;
-          border-radius: 4px;
-          margin-bottom: 8px;
-        }
-        
-        :root.dark .loadingLine {
-          background: linear-gradient(90deg, #3d2914 25%, #2d1f0f 50%, #3d2914 75%) !important;
-        }
-        
-        .loadingLine.short {
-          width: 60%;
-          height: 12px;
-        }
-        
-        @keyframes loading {
-          0% { background-position: 200% 0; }
-          100% { background-position: -200% 0; }
+        :root.dark .spinner {
+          border-color: #4a3319;
+          border-top-color: #a65b2b;
         }
         
         @media (max-width: 1200px) {
