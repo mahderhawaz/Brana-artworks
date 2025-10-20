@@ -62,8 +62,8 @@ export default function CollectionsPage() {
           <nav className="nav-links" style={{ display: "flex", gap: 16, alignItems: "center", fontSize: 15, position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
             <Link href="/" className="nav-link">Home</Link>
             <Link href="/collections" className="nav-link active">Our Collections</Link>
-            <Link href="/#about" className="nav-link">About Us</Link>
-            <Link href="/#contact" className="nav-link">Contact</Link>
+            <Link href="/about" className="nav-link">About Us</Link>
+            <Link href="/contact" className="nav-link">Contact</Link>
           </nav>
 
           <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>

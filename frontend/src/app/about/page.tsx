@@ -25,7 +25,7 @@ export default function AboutPage() {
             <Link href="/" className="nav-link">Home</Link>
             <Link href="/collections" className="nav-link">Our Collections</Link>
             <Link href="/about" className="nav-link active">About Us</Link>
-            <Link href="/#contact" className="nav-link">Contact</Link>
+            <Link href="/contact" className="nav-link">Contact</Link>
           </nav>
 
           <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
