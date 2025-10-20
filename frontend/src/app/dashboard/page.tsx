@@ -3,10 +3,11 @@
 import Head from "next/head";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import DashboardSidebar from "../../components/DashboardSidebar";
-import { api, User } from "../../lib/api";
-
-
+import ThemeToggle from "../../components/ThemeToggle";
+import MobileNav from "../../components/MobileNav";
+import { api, User, Artwork } from "../../lib/api";
 
 const stats = [
   { label: "Total Sales", value: "$12,500" },
@@ -23,50 +24,6 @@ const DashboardStats: React.FC = () => (
         <div className="value">{s.value}</div>
       </div>
     ))}
-
-    <style jsx>{`
-      :global(:root) {
-        --card-bg: #fff;
-        --muted: #6b625d;
-        --accent: #a65b2b;
-        --shadow: 0 10px 28px rgba(0, 0, 0, 0.06);
-      }
-      .stats {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 18px;
-        margin: 18px 0 28px;
-      }
-      .statCard {
-        background: var(--card-bg);
-        padding: 18px 20px;
-        border-radius: 12px;
-        box-shadow: var(--shadow);
-        border: 1px solid rgba(0, 0, 0, 0.03);
-      }
-      .label {
-        font-size: 13px;
-        color: var(--muted);
-        font-weight: 600;
-      }
-      .value {
-        margin-top: 8px;
-        font-family: "Playfair Display", serif;
-        font-size: 22px;
-        color: #1a1410;
-      }
-
-      @media (max-width: 900px) {
-        .stats {
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
-      @media (max-width: 520px) {
-        .stats {
-          grid-template-columns: 1fr;
-        }
-      }
-    `}</style>
   </section>
 );
 
@@ -77,7 +34,6 @@ const ArtCard: React.FC<Art> = ({ src, title, price, status = "For Sale" }) => (
     <div className="media">
       <Image src={src} alt={title} fill style={{ objectFit: "cover" }} />
     </div>
-
     <div className="info">
       <h3 className="artTitle">{title}</h3>
       <div className="row">
@@ -85,62 +41,6 @@ const ArtCard: React.FC<Art> = ({ src, title, price, status = "For Sale" }) => (
         <div className={`badge ${status === "Pending" ? "pending" : ""}`}>{status}</div>
       </div>
     </div>
-
-    <style jsx>{`
-      :global(:root) {
-        --card-bg: #fff;
-        --muted: #6b625d;
-        --accent: #a65b2b;
-        --success: #1f9d6a;
-        --pending: #f0d8b8;
-        --shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-      }
-      .artCard {
-        background: var(--card-bg);
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: var(--shadow);
-        border: 1px solid rgba(0, 0, 0, 0.03);
-        display: flex;
-        flex-direction: column;
-      }
-      .media {
-        position: relative;
-        height: 170px;
-        background: #efece9;
-      }
-      .info {
-        padding: 12px 14px 16px;
-      }
-      .artTitle {
-        font-family: "Playfair Display", serif;
-        font-size: 16px;
-        margin: 0 0 8px;
-        color: #1a1410;
-      }
-      .row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 12px;
-      }
-      .price {
-        color: var(--accent);
-        font-weight: 700;
-      }
-      .badge {
-        background: #e8f5ee;
-        color: #1b8a5a;
-        padding: 6px 10px;
-        border-radius: 999px;
-        font-size: 12px;
-        font-weight: 700;
-      }
-      .pending {
-        background: var(--pending);
-        color: var(--accent);
-      }
-    `}</style>
   </article>
 );
 
@@ -153,17 +53,27 @@ const demoArt: Art[] = [
 
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
+  const [recentArtworks, setRecentArtworks] = useState<Artwork[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchData = async () => {
       try {
         const userData = await api.getProfile();
         setUser(userData);
+        
+        const userArtworks = await api.getUserArtworks();
+        const recent = userArtworks
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+          .slice(0, 4);
+        setRecentArtworks(recent);
       } catch (error) {
-        console.error('Failed to fetch user profile:', error);
+        console.error('Failed to fetch data:', error);
+      } finally {
+        setLoading(false);
       }
     };
-    fetchUser();
+    fetchData();
   }, []);
 
   return (
@@ -176,29 +86,29 @@ export default function DashboardPage() {
       <div className="page">
         <DashboardSidebar activePage="dashboard" />
         <div className="contentArea">
-        <header className="topnav" role="banner">
-          <div className="brand">
-          </div>
-
-          <nav className="centerlinks" aria-label="Main">
-            <a href="/">Home</a>
-            <a href="/collections">Explore</a>
-            <a href="/dashboard">Dashboard</a>
-            <a href="/my-artworks">My Artworks</a>
-          </nav>
-
-          <div className="right">
-            <button className="iconBtn" aria-label="Notifications">🔔</button>
-            <div className="avatar">
-              <Image 
-                src={user?.profilePicture || "/assets/hanna.jpg"} 
-                alt="User" 
-                width={36} 
-                height={36} 
-              />
+          <header className="topnav" role="banner">
+            <div className="brand"></div>
+            <nav className="centerlinks" aria-label="Main">
+              <a href="/" className="nav-link">Home</a>
+              <a href="/collections" className="nav-link">Explore</a>
+              <a href="/dashboard" className="nav-link">Dashboard</a>
+              <a href="/my-artworks" className="nav-link">My Artworks</a>
+            </nav>
+            <div className="right">
+              <ThemeToggle />
+              <MobileNav isDashboard={true} />
+              <button className="iconBtn" aria-label="Notifications">🔔</button>
+              <div className="avatar">
+                <Image 
+                  src={user?.profilePicture || "/assets/hanna.jpg"} 
+                  alt="User" 
+                  width={36} 
+                  height={36} 
+                />
+              </div>
             </div>
-          </div>
-        </header>
+          </header>
+          
           <main className="main">
             <div className="pageHeader">
               <h1>Dashboard Overview</h1>
@@ -206,91 +116,290 @@ export default function DashboardPage() {
             </div>
             <DashboardStats />
 
-            <section className="artSection" aria-label="My Artworks">
+            <section className="artSection" aria-label="My Recent Artworks">
               <div className="headerRow">
-                <h3 className="sectionTitle">My Artworks</h3>
-                <a href="/upload-artwork" className="upload">+ Upload New Artwork</a>
+                <h3 className="sectionTitle">My Recent Artworks</h3>
+                <div className="actionButtons">
+                  <Link href="/my-artworks" className="viewAll">
+                    Click Here to View My Artworks
+                  </Link>
+                  <a href="/upload-artwork" className="upload">+ Upload New Artwork</a>
+                </div>
               </div>
 
-              <div className="grid">
-                {demoArt.map((a) => (
-                  <ArtCard key={a.title} {...a} />
-                ))}
-              </div>
+              {loading ? (
+                <div className="loadingGrid">
+                  {[1, 2, 3, 4].map(i => (
+                    <div key={i} className="loadingCard">
+                      <div className="loadingImage"></div>
+                      <div className="loadingText">
+                        <div className="loadingLine"></div>
+                        <div className="loadingLine short"></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : recentArtworks.length > 0 ? (
+                <div className="grid">
+                  {recentArtworks.map((artwork) => (
+                    <article key={artwork._id} className="artCard">
+                      <div className="media">
+                        <img 
+                          src={artwork.imageUrl} 
+                          alt={artwork.title} 
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                      </div>
+                      <div className="info">
+                        <h3 className="artTitle">{artwork.title}</h3>
+                        <div className="row">
+                          <div className="price">
+                            {artwork.forSale ? `$${artwork.price}` : 'Not for sale'}
+                          </div>
+                          <div className={`badge ${artwork.sold ? 'sold' : artwork.forSale ? 'forSale' : 'notForSale'}`}>
+                            {artwork.sold ? 'Sold' : artwork.forSale ? 'For Sale' : 'Private'}
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <div className="grid">
+                  {demoArt.map((art) => (
+                    <ArtCard key={art.title} {...art} />
+                  ))}
+                </div>
+              )}
             </section>
           </main>
         </div>
       </div>
 
-      <style jsx>{`
-        :root {
-          --page-bg: #fbfaf8;
-          --accent: #a65b2b;
-          --muted: #6b625d;
-        }
-        * { box-sizing: border-box; }
-        body { margin: 0; font-family: "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial; background: var(--page-bg); color: #a65b2b !important; }
-        * { color: #a65b2b !important; }
-        .page { display: flex; min-height: 100vh; }
-        .contentArea { flex: 1; display: flex; flex-direction: column; }
-
-        .topnav {
-          display:flex;
-          align-items:center;
-          justify-content:space-between;
-          padding: 14px 28px;
-          border-bottom: 1px solid rgba(0,0,0,0.06);
+      <style jsx global>{`
+        body {
           background: #fff;
+          color: #a65b2b;
+          transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        :root.dark body {
+          background: #3d2914 !important;
+          color: white !important;
+        }
+        
+        :root.dark .main {
+          background: #3d2914 !important;
+        }
+        
+        :root.dark .contentArea {
+          background: #3d2914 !important;
+        }
+        
+        .topnav {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 14px 28px;
+          border-bottom: 1px solid rgba(166, 91, 43, 0.1);
+          background: #fbfaf8;
           position: sticky;
           top: 0;
           z-index: 20;
+          overflow-x: auto;
         }
-        .brand{ display:flex; align-items:center; gap:12px; }
-        .centerlinks { display:flex; gap:20px; }
-        .centerlinks a { color:#a65b2b !important; text-decoration:none; font-weight:600; }
-        .centerlinks a:hover { text-decoration:underline; }
-        .right { display:flex; align-items:center; gap:12px; }
-        .iconBtn{
-          background:transparent;
-          border:none;
-          font-size:18px;
-          cursor:pointer;
+        
+        :root.dark .topnav {
+          background: #3d2914 !important;
+          border-bottom: 1px solid rgba(255,255,255,0.1) !important;
         }
-        .avatar { border-radius:999px; overflow:hidden; }
-        .avatar img { border-radius: 50%; object-fit: cover; }
-
+        
+        .nav-link {
+          color: #a65b2b !important;
+          text-decoration: none;
+          font-weight: 600;
+        }
+        
+        :root.dark .nav-link {
+          color: white !important;
+        }
+        
+        .nav-link:hover {
+          text-decoration: underline;
+        }
+        
+        .iconBtn {
+          background: transparent;
+          border: none;
+          font-size: 18px;
+          cursor: pointer;
+          color: #a65b2b;
+        }
+        
+        :root.dark .iconBtn {
+          color: white !important;
+        }
+        
+        .centerlinks {
+          display: flex;
+          gap: 20px;
+        }
+        
+        .right {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+        
+        .avatar {
+          border-radius: 999px;
+          overflow: hidden;
+        }
+        
+        .avatar img {
+          border-radius: 50%;
+          object-fit: cover;
+        }
+        
+        .page {
+          display: flex;
+          min-height: 100vh;
+        }
+        
+        .contentArea {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+        }
+        
         .main {
           padding: 22px 32px;
           max-width: 1200px;
           margin: 0 auto;
           width: 100%;
         }
-
+        
         .pageHeader {
           margin-bottom: 24px;
         }
-        h1 { font-family: "Playfair Display", serif; font-size: 36px; margin: 0; color: #a65b2b !important; }
+        
+        h1 {
+          font-family: "Playfair Display", serif;
+          font-size: 36px;
+          margin: 0;
+          color: #a65b2b;
+        }
+        
+        :root.dark h1 {
+          color: white !important;
+        }
+        
         .subtitle {
           margin: 0;
-          color: var(--muted);
+          color: #6b625d;
           font-size: 16px;
         }
-
+        
+        :root.dark .subtitle {
+          color: white !important;
+        }
+        
+        .stats {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 18px;
+          margin: 18px 0 28px;
+        }
+        
+        .statCard {
+          background: #fff;
+          padding: 18px 20px;
+          border-radius: 12px;
+          box-shadow: 0 10px 28px rgba(0, 0, 0, 0.06);
+          border: 1px solid rgba(166, 91, 43, 0.1);
+        }
+        
+        :root.dark .statCard {
+          background: #4a3319 !important;
+          border: 1px solid rgba(255,255,255,0.1) !important;
+        }
+        
+        .label {
+          font-size: 13px;
+          color: #6b625d;
+          font-weight: 600;
+        }
+        
+        :root.dark .label {
+          color: white !important;
+        }
+        
+        .value {
+          margin-top: 8px;
+          font-family: "Playfair Display", serif;
+          font-size: 22px;
+          color: #a65b2b;
+        }
+        
+        :root.dark .value {
+          color: white !important;
+        }
+        
         .headerRow {
           display: flex;
           justify-content: space-between;
           align-items: center;
           margin-bottom: 12px;
         }
+        
         .sectionTitle {
           font-family: "Playfair Display", serif;
           font-size: 20px;
-          color: #1a1410;
+          color: #a65b2b;
           margin: 0;
         }
+        
+        :root.dark .sectionTitle {
+          color: white !important;
+        }
+        
+        .actionButtons {
+          display: flex;
+          gap: 12px;
+          align-items: center;
+        }
+        
+        .viewAll {
+          background: transparent;
+          color: #a65b2b;
+          padding: 8px 14px;
+          border: 2px solid #a65b2b;
+          border-radius: 10px;
+          font-weight: 700;
+          cursor: pointer;
+          text-decoration: none;
+          display: inline-block;
+          transition: all 0.3s ease;
+        }
+        
+        :root.dark .viewAll {
+          color: white !important;
+          border-color: #a65b2b !important;
+        }
+        
+        .viewAll:hover {
+          background: #a65b2b;
+          color: #fff;
+        }
+        
+        :root.dark .viewAll:hover {
+          background: #a65b2b !important;
+          color: white !important;
+        }
+        
         .upload {
-          background: var(--accent);
-          color: #fff !important;
+          background: #a65b2b;
+          color: #fff;
           padding: 8px 14px;
           border-radius: 10px;
           border: none;
@@ -298,25 +407,235 @@ export default function DashboardPage() {
           cursor: pointer;
           text-decoration: none;
           display: inline-block;
+          transition: all 0.3s ease;
         }
-        .upload:hover {
-          background: #8f4a20;
+        
+        :root.dark .upload {
+          background: #a65b2b !important;
+          color: white !important;
         }
+        
         .grid {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
           gap: 18px;
           margin-top: 12px;
         }
-
-        @media (max-width: 1100px) {
-          .grid {
+        
+        .artCard {
+          background: #fff;
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+          border: 1px solid rgba(166, 91, 43, 0.1);
+          display: flex;
+          flex-direction: column;
+        }
+        
+        :root.dark .artCard {
+          background: #4a3319 !important;
+          border: 1px solid rgba(255,255,255,0.1) !important;
+        }
+        
+        .media {
+          position: relative;
+          height: 170px;
+          background: #efece9;
+        }
+        
+        :root.dark .media {
+          background: #3d2914 !important;
+        }
+        
+        .info {
+          padding: 12px 14px 16px;
+        }
+        
+        .artTitle {
+          font-family: "Playfair Display", serif;
+          font-size: 16px;
+          margin: 0 0 8px;
+          color: #a65b2b;
+        }
+        
+        :root.dark .artTitle {
+          color: white !important;
+        }
+        
+        .row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 12px;
+        }
+        
+        .price {
+          color: #a65b2b;
+          font-weight: 700;
+        }
+        
+        :root.dark .price {
+          color: white !important;
+        }
+        
+        .badge {
+          background: #e8f5ee;
+          color: #1b8a5a;
+          padding: 6px 10px;
+          border-radius: 999px;
+          font-size: 12px;
+          font-weight: 700;
+        }
+        
+        :root.dark .badge {
+          background: #4a3319 !important;
+          color: white !important;
+        }
+        
+        .loadingGrid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 18px;
+          margin-top: 12px;
+        }
+        
+        .loadingCard {
+          background: #fff;
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 10px 28px rgba(0, 0, 0, 0.06);
+        }
+        
+        :root.dark .loadingCard {
+          background: #4a3319 !important;
+        }
+        
+        .loadingImage {
+          height: 170px;
+          background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+          background-size: 200% 100%;
+          animation: loading 1.5s infinite;
+        }
+        
+        :root.dark .loadingImage {
+          background: linear-gradient(90deg, #3d2914 25%, #2d1f0f 50%, #3d2914 75%) !important;
+        }
+        
+        .loadingText {
+          padding: 12px 14px 16px;
+        }
+        
+        .loadingLine {
+          height: 16px;
+          background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+          background-size: 200% 100%;
+          animation: loading 1.5s infinite;
+          border-radius: 4px;
+          margin-bottom: 8px;
+        }
+        
+        :root.dark .loadingLine {
+          background: linear-gradient(90deg, #3d2914 25%, #2d1f0f 50%, #3d2914 75%) !important;
+        }
+        
+        .loadingLine.short {
+          width: 60%;
+          height: 12px;
+        }
+        
+        @keyframes loading {
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
+        
+        @media (max-width: 1200px) {
+          .main {
+            padding: 20px 24px;
+          }
+        }
+        
+        @media (max-width: 1024px) {
+          .page {
+            flex-direction: column;
+          }
+          .grid, .loadingGrid {
+            grid-template-columns: repeat(3, 1fr);
+          }
+          .stats {
             grid-template-columns: repeat(2, 1fr);
           }
         }
+        
+        @media (max-width: 768px) {
+          .topnav {
+            padding: 12px 16px;
+          }
+          .centerlinks {
+            display: none;
+          }
+          .main {
+            padding: 16px 20px;
+          }
+          h1 {
+            font-size: 28px;
+          }
+          .grid, .loadingGrid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+          }
+          .headerRow {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 12px;
+          }
+          .actionButtons {
+            flex-direction: column;
+            align-items: stretch;
+          }
+        }
+        
         @media (max-width: 640px) {
-          .grid {
+          .stats {
             grid-template-columns: 1fr;
+            gap: 12px;
+          }
+          .statCard {
+            padding: 14px 16px;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .main {
+            padding: 12px 16px;
+          }
+          h1 {
+            font-size: 24px;
+          }
+          .grid, .loadingGrid {
+            grid-template-columns: 1fr;
+            gap: 10px;
+          }
+          .right {
+            gap: 8px;
+          }
+          .viewAll, .upload {
+            padding: 6px 12px;
+            font-size: 14px;
+          }
+        }
+        
+        @media (max-width: 375px) {
+          .main {
+            padding: 10px 12px;
+          }
+          h1 {
+            font-size: 22px;
+          }
+          .statCard {
+            padding: 12px 14px;
+          }
+          .value {
+            font-size: 18px;
           }
         }
       `}</style>
