@@ -7,41 +7,21 @@ import * as dotenv from 'dotenv';
 dotenv.config(); // <-- load env variables here
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    bodyParser: true,
+  });
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }));
-  const basePort = parseInt(process.env.PORT as string, 10) || 3000;
-  // If PORT is explicitly set, bind to it strictly (no fallback)
-  if (process.env.PORT) {
-    await app.listen(basePort);
-    const url = await app.getUrl();
-    console.log(`🚀 Server listening at ${url}`);
-    return;
-  }
-
-  // Otherwise, try a small range for convenience during local dev
-  const maxAttempts = 10; // try basePort..basePort+9
-  for (let i = 0; i < maxAttempts; i++) {
-    const portToTry = basePort + i;
-    try {
-      await app.listen(portToTry);
-      const url = await app.getUrl();
-      if (i > 0) {
-        console.warn(`Port ${basePort} was busy; switched to ${portToTry}`);
-      }
-      console.log(`🚀 Server listening at ${url}`);
-      return;
-    } catch (err: any) {
-      if (err && err.code === 'EADDRINUSE') {
-        if (i === maxAttempts - 1) {
-          console.error(`All ports from ${basePort} to ${basePort + maxAttempts - 1} are in use.`);
-          throw err;
-        }
-        continue;
-      }
-      throw err;
-    }
-  }
+  
+  // Increase payload size limit for image uploads
+  app.use(require('express').json({ limit: '50mb' }));
+  app.use(require('express').urlencoded({ limit: '50mb', extended: true }));
+  const port = process.env.PORT || 10000;
+  await app.listen(port, '0.0.0.0');
+  console.log(`🚀 Server listening on port ${port}`);
 }
-bootstrap();
+bootstrap().catch(err => {
+  console.error('Failed to start server:', err);
+  process.exit(1);
+});
 
