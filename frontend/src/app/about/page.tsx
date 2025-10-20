@@ -3,6 +3,8 @@
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+import ThemeToggle from "../../components/ThemeToggle";
+import MobileNav from "../../components/MobileNav";
 import "../../styles/globals.css";
 
 export default function AboutPage() {
@@ -19,16 +21,18 @@ export default function AboutPage() {
             <Image src="/assets/logo.png" alt="BRANA Arts" width={60} height={60} priority className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-18 lg:h-18 xl:w-20 xl:h-20 rounded-full object-cover" />
           </div>
 
-          <nav style={{ display: "flex", gap: 16, alignItems: "center", fontSize: 15, position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
-            <Link href="/" style={{ color: "#a65b2b", textDecoration: "none" }}>Home</Link>
-            <Link href="/collections" style={{ color: "#a65b2b", textDecoration: "none" }}>Our Collections</Link>
-            <Link href="/about" style={{ color: "#a65b2b", textDecoration: "none", fontWeight: "bold" }}>About Us</Link>
-            <Link href="/#contact" style={{ color: "#a65b2b", textDecoration: "none" }}>Contact</Link>
+          <nav className="nav-links" style={{ display: "flex", gap: 16, alignItems: "center", fontSize: 15, position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
+            <Link href="/" className="nav-link">Home</Link>
+            <Link href="/collections" className="nav-link">Our Collections</Link>
+            <Link href="/about" className="nav-link active">About Us</Link>
+            <Link href="/#contact" className="nav-link">Contact</Link>
           </nav>
 
-          <div style={{ display: "flex", gap: "8px" }}>
-            <Link href="/signup" style={{ background: "#a65b2b", color: "#fff", padding: "7px 12px", borderRadius: 8, textDecoration: "none" }}>Sign Up</Link>
-            <Link href="/login" style={{ background: "#a65b2b", color: "#fff", padding: "7px 12px", borderRadius: 8, textDecoration: "none" }}>Log in</Link>
+          <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+            <ThemeToggle />
+            <MobileNav />
+            <Link href="/signup" className="auth-btn">Sign Up</Link>
+            <Link href="/login" className="auth-btn">Log in</Link>
           </div>
         </div>
       </header>
@@ -78,19 +82,19 @@ export default function AboutPage() {
               To preserve, promote, and celebrate Ethiopian artistic heritage while providing a sustainable platform for local artists to showcase their work and connect with collectors worldwide.
             </p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "30px", marginTop: "40px" }}>
-              <div style={{ padding: "30px", backgroundColor: "white", borderRadius: "12px", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
+              <div className="mission-card" style={{ padding: "30px", backgroundColor: "white", borderRadius: "12px", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
                 <h3 style={{ color: "#a65b2b", marginBottom: "15px", fontSize: "1.3rem" }}>Preserve Culture</h3>
                 <p style={{ color: "#6b625d", lineHeight: "1.6" }}>
                   Safeguarding traditional Ethiopian art forms and techniques for future generations.
                 </p>
               </div>
-              <div style={{ padding: "30px", backgroundColor: "white", borderRadius: "12px", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
+              <div className="mission-card" style={{ padding: "30px", backgroundColor: "white", borderRadius: "12px", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
                 <h3 style={{ color: "#a65b2b", marginBottom: "15px", fontSize: "1.3rem" }}>Support Artists</h3>
                 <p style={{ color: "#6b625d", lineHeight: "1.6" }}>
                   Providing a platform for artists to earn sustainable income from their craft.
                 </p>
               </div>
-              <div style={{ padding: "30px", backgroundColor: "white", borderRadius: "12px", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
+              <div className="mission-card" style={{ padding: "30px", backgroundColor: "white", borderRadius: "12px", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
                 <h3 style={{ color: "#a65b2b", marginBottom: "15px", fontSize: "1.3rem" }}>Global Reach</h3>
                 <p style={{ color: "#6b625d", lineHeight: "1.6" }}>
                   Connecting Ethiopian art with collectors and enthusiasts around the world.
@@ -174,6 +178,77 @@ export default function AboutPage() {
           </div>
         </section>
       </main>
+
+      <style jsx global>{`
+        .nav-link {
+          color: #a65b2b !important;
+          text-decoration: none;
+          transition: color 0.2s ease;
+        }
+        
+        :root:not(.dark) .nav-link {
+          color: #a65b2b !important;
+        }
+        
+        .nav-link.active {
+          font-weight: bold;
+        }
+        
+        .auth-btn {
+          background: #a65b2b;
+          color: #fff;
+          padding: 7px 12px;
+          border-radius: 8px;
+          text-decoration: none;
+          transition: background 0.2s ease;
+        }
+        
+        header {
+          background: #fbfaf8 !important;
+        }
+        
+        :root.dark .nav-link {
+          color: white !important;
+        }
+        
+        :root.dark .auth-btn {
+          background: #a65b2b !important;
+          color: white !important;
+        }
+        
+        :root.dark header {
+          background: #3d2914 !important;
+          border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+        }
+        
+        :root.dark main {
+          background: #3d2914 !important;
+        }
+        
+        :root.dark body {
+          background: #3d2914 !important;
+        }
+        
+        :root.dark h1, :root.dark h2, :root.dark h3, :root.dark p {
+          color: white !important;
+        }
+        
+        :root.dark section > div {
+          background: #4a3319 !important;
+        }
+        
+        :root.dark .mission-card {
+          background: #4a3319 !important;
+        }
+        
+        :root.dark .mission-card h3 {
+          color: #f4e4bc !important;
+        }
+        
+        :root.dark .mission-card p {
+          color: #e8d5b7 !important;
+        }
+      `}</style>
     </>
   );
 }
