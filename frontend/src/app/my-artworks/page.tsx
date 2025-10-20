@@ -177,7 +177,13 @@ export default function MyArtworksPage() {
             </a>
           </div>
 
-          {artworkRows.map((row, rowIndex) => (
+          {loading ? (
+            <div className="loadingState">
+              <div className="spinner"></div>
+              <p>Loading your artworks...</p>
+            </div>
+          ) : (
+            artworkRows.map((row, rowIndex) => (
             <section key={rowIndex} className="artworkRow" aria-label={`Artwork row ${rowIndex + 1}`}>
               <div className="scrollContainer">
                 <div className="artworkGrid">
@@ -208,8 +214,10 @@ export default function MyArtworksPage() {
                 }}>›</button>
               </div>
             </section>
-          ))}
+          ))
+          )}
 
+          {!loading && (
           <nav className="pagination" aria-label="Pagination">
             <button className="pageBtn" onClick={() => goto(page - 1)} aria-label="Previous page">
               ‹
@@ -233,6 +241,7 @@ export default function MyArtworksPage() {
               ›
             </button>
           </nav>
+          )}
         </main>
           </div>
         </div>
@@ -342,6 +351,14 @@ export default function MyArtworksPage() {
           background: #3d2914 !important;
         }
 
+        :root{
+          --page-bg: #fbfaf8;
+          --muted: #6b625d;
+          --accent: #a65b2b;
+          --card-shadow: 0 10px 30px rgba(0,0,0,0.06);
+          --card-shadow-hover: 0 20px 45px rgba(0,0,0,0.12);
+          --accent-light: rgba(166, 91, 43, 0.1);
+        }
         *{box-sizing:border-box}
         body { margin: 0; font-family: "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial; background: var(--page-bg); color: #a65b2b !important; }
         * { color: #a65b2b !important; }
@@ -575,6 +592,41 @@ export default function MyArtworksPage() {
           box-shadow: 0 4px 12px rgba(193, 122, 74, 0.2);
         }
         .dots{ font-size:16px; padding: 0 4px; }
+
+        /* loading state */
+        .loadingState {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 80px 20px;
+          text-align: center;
+        }
+        .spinner {
+          width: 40px;
+          height: 40px;
+          border: 3px solid #f3f1ef;
+          border-top: 3px solid #a65b2b;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+          margin-bottom: 20px;
+        }
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        .loadingState p {
+          color: #a65b2b;
+          font-size: 16px;
+          margin: 0;
+        }
+        :root.dark .loadingState p {
+          color: white !important;
+        }
+        :root.dark .spinner {
+          border-color: #4a3319;
+          border-top-color: #a65b2b;
+        }
 
         /* responsive */
         @media (max-width: 768px){
