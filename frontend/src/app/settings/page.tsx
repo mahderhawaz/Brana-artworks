@@ -6,6 +6,7 @@ import React, { useState, useRef, useEffect } from "react";
 import DashboardSidebar from "../../components/DashboardSidebar";
 import ThemeToggle from "../../components/ThemeToggle";
 import DefaultAvatar from "../../components/DefaultAvatar";
+import PageTransition from "../../components/PageTransition";
 import { api, User } from "../../lib/api";
 
 export default function SettingsPage() {
@@ -100,9 +101,10 @@ export default function SettingsPage() {
         <meta name="viewport" content="width=device-width,initial-scale=1" />
       </Head>
 
-      <div className="page">
-        <DashboardSidebar activePage="settings" />
-        <div className="contentArea">
+      <PageTransition>
+        <div className="page">
+          <DashboardSidebar activePage="settings" />
+          <div className="contentArea">
         <header className="topnav" role="banner">
         <div className="brand">
         </div>
@@ -303,8 +305,9 @@ export default function SettingsPage() {
           </div>
         </form>
       </main>
+          </div>
         </div>
-      </div>
+      </PageTransition>
 
       <style jsx global>{`
         body {

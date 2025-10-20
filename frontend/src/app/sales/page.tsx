@@ -6,6 +6,7 @@ import React, { useMemo, useState, useEffect } from "react";
 import DashboardSidebar from "../../components/DashboardSidebar";
 import ThemeToggle from "../../components/ThemeToggle";
 import DefaultAvatar from "../../components/DefaultAvatar";
+import PageTransition from "../../components/PageTransition";
 import { api, User } from "../../lib/api";
 
 type Sale = {
@@ -91,9 +92,10 @@ export default function SalesPage() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <div className="page">
-        <DashboardSidebar activePage="sales" />
-        <div className="contentArea">
+      <PageTransition>
+        <div className="page">
+          <DashboardSidebar activePage="sales" />
+          <div className="contentArea">
         <header className="topnav" role="banner">
           <div className="brand">
           </div>
@@ -217,8 +219,9 @@ export default function SalesPage() {
             <button className="pgBtn" onClick={() => goto(currentPage + 1)} disabled={currentPage === totalPages}>Next</button>
           </nav>
         </main>
+          </div>
         </div>
-      </div>
+      </PageTransition>
 
       <style jsx global>{`
         body {
