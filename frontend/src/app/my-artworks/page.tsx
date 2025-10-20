@@ -4,6 +4,7 @@ import Head from "next/head"
 import Image from "next/image"
 import { useState, useEffect } from "react"
 import DashboardSidebar from "../../components/DashboardSidebar"
+import ThemeToggle from "../../components/ThemeToggle"
 import { api, Artwork, User } from "../../lib/api"
 
 /**
@@ -135,13 +136,14 @@ export default function MyArtworksPage() {
           </div>
 
           <nav className="centerlinks" aria-label="Main">
-            <a href="/">Home</a>
-            <a href="/collections">Explore</a>
-            <a href="/dashboard">Dashboard</a>
-            <a href="/my-artworks">My Artworks</a>
+            <a href="/" className="nav-link">Home</a>
+            <a href="/collections" className="nav-link">Explore</a>
+            <a href="/dashboard" className="nav-link">Dashboard</a>
+            <a href="/my-artworks" className="nav-link">My Artworks</a>
           </nav>
 
           <div className="right">
+            <ThemeToggle />
             <button className="iconBtn" aria-label="Notifications">
               🔔
             </button>
@@ -227,14 +229,108 @@ export default function MyArtworksPage() {
         </div>
       </div>
 
-      <style jsx>{`
-        :root{
-          --page-bg: #faf8f5;
-          --muted: #8b7d75;
-          --accent: #c17a4a;
-          --accent-light: #e8d5c4;
-          --card-shadow: 0 8px 24px rgba(0,0,0,0.08);
-          --card-shadow-hover: 0 16px 40px rgba(0,0,0,0.12);
+      <style jsx global>{`
+        body {
+          background: #fff;
+          color: #a65b2b;
+          transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        :root.dark body {
+          background: #3d2914 !important;
+          color: white !important;
+        }
+        
+        .topnav {
+          background: #fbfaf8;
+          border-bottom: 1px solid rgba(166, 91, 43, 0.1);
+        }
+        
+        :root.dark .topnav {
+          background: #3d2914 !important;
+          border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+        }
+        
+        .nav-link {
+          color: #a65b2b !important;
+          text-decoration: none;
+          font-weight: 600;
+        }
+        
+        :root.dark .nav-link {
+          color: white !important;
+        }
+        
+        .nav-link:hover {
+          text-decoration: underline;
+        }
+        
+        .iconBtn {
+          color: #a65b2b;
+        }
+        
+        :root.dark .iconBtn {
+          color: white !important;
+        }
+        
+        h1 {
+          color: #a65b2b !important;
+        }
+        
+        :root.dark h1 {
+          color: white !important;
+        }
+        
+        .subtitle {
+          color: #8b7d75;
+        }
+        
+        :root.dark .subtitle {
+          color: white !important;
+        }
+        
+        .uploadBtn {
+          background: #c17a4a;
+          color: #fff !important;
+        }
+        
+        :root.dark .uploadBtn {
+          background: #a65b2b !important;
+          color: white !important;
+        }
+        
+        .card {
+          background: #fff;
+          border: 1px solid rgba(166, 91, 43, 0.1);
+        }
+        
+        :root.dark .card {
+          background: #4a3319 !important;
+          border: 1px solid rgba(255,255,255,0.1) !important;
+        }
+        
+        .title {
+          color: #fff;
+        }
+        
+        :root.dark .title {
+          color: white !important;
+        }
+        
+        .price {
+          color: #fff;
+        }
+        
+        :root.dark .price {
+          color: white !important;
+        }
+        
+        :root.dark .main {
+          background: #3d2914 !important;
+        }
+        
+        :root.dark .contentArea {
+          background: #3d2914 !important;
         }
 
         *{box-sizing:border-box}

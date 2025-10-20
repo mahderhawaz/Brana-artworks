@@ -4,6 +4,7 @@ import Head from "next/head";
 import Image from "next/image";
 import React, { useRef, useState, useEffect } from "react";
 import DashboardSidebar from "../../components/DashboardSidebar";
+import ThemeToggle from "../../components/ThemeToggle";
 import { api, User } from "../../lib/api";
 
 export default function ProfileSettingsPage() {
@@ -127,13 +128,14 @@ export default function ProfileSettingsPage() {
         </div>
 
         <nav className="centerlinks" aria-label="Main navigation">
-          <a href="/">Home</a>
-          <a href="/collections">Explore</a>
-          <a href="/dashboard">Dashboard</a>
-          <a href="/my-artworks">My Artworks</a>
+          <a href="/" className="nav-link">Home</a>
+          <a href="/collections" className="nav-link">Explore</a>
+          <a href="/dashboard" className="nav-link">Dashboard</a>
+          <a href="/my-artworks" className="nav-link">My Artworks</a>
         </nav>
 
         <div className="right">
+          <ThemeToggle />
           <button className="iconBtn" aria-label="Notifications">🔔</button>
           <div className="avatarWrap">
             <Image 
@@ -268,13 +270,126 @@ export default function ProfileSettingsPage() {
         </div>
       </div>
 
-      <style jsx>{`
+      <style jsx global>{`
+        body {
+          background: #fbfaf8;
+          color: #a65b2b;
+          transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        :root.dark body {
+          background: #3d2914 !important;
+          color: white !important;
+        }
+        
+        .topnav {
+          background: #fbfaf8;
+          border-bottom: 1px solid rgba(166, 91, 43, 0.1);
+        }
+        
+        :root.dark .topnav {
+          background: #3d2914 !important;
+          border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+        }
+        
+        .nav-link {
+          color: #a65b2b !important;
+          text-decoration: none;
+          font-weight: 600;
+        }
+        
+        :root.dark .nav-link {
+          color: white !important;
+        }
+        
+        .nav-link:hover {
+          text-decoration: underline;
+        }
+        
+        .iconBtn {
+          color: #a65b2b;
+        }
+        
+        :root.dark .iconBtn {
+          color: white !important;
+        }
+        
+        h1 {
+          color: #a65b2b !important;
+        }
+        
+        :root.dark h1 {
+          color: white !important;
+        }
+        
+        .lead {
+          color: #6b625d;
+        }
+        
+        :root.dark .lead {
+          color: white !important;
+        }
+        
+        .labelCol h3 {
+          color: #a65b2b;
+        }
+        
+        :root.dark .labelCol h3 {
+          color: white !important;
+        }
+        
+        .small {
+          color: #6b625d;
+        }
+        
+        :root.dark .small {
+          color: white !important;
+        }
+        
+        .fieldLabel {
+          color: #a65b2b !important;
+        }
+        
+        :root.dark .fieldLabel {
+          color: white !important;
+        }
+        
+        .input, .select, .textarea {
+          background: #fff;
+          border: 1px solid rgba(166, 91, 43, 0.1);
+          color: #a65b2b;
+        }
+        
+        :root.dark .input, :root.dark .select, :root.dark .textarea {
+          background: #4a3319 !important;
+          border: 1px solid rgba(255,255,255,0.1) !important;
+          color: white !important;
+        }
+        
+        .saveBtn {
+          background: #a65b2b;
+          color: #fff !important;
+        }
+        
+        :root.dark .saveBtn {
+          background: #a65b2b !important;
+          color: white !important;
+        }
+        
         :root{
           --page-bg: #fbfaf8;
           --muted: #6b625d;
           --accent: #a65b2b;
           --soft: rgba(0,0,0,0.06);
           --card-shadow: 0 8px 24px rgba(0,0,0,0.05);
+        }
+        
+        :root.dark .main {
+          background: #3d2914 !important;
+        }
+        
+        :root.dark .contentArea {
+          background: #3d2914 !important;
         }
         * { box-sizing: border-box; }
         body { margin: 0; font-family: "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial; background: var(--page-bg); color: #a65b2b !important; }

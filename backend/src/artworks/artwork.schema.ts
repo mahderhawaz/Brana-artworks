@@ -18,6 +18,9 @@ export class Artwork extends Document {
   @Prop({ default: 0 })
   likes: number;
 
+  @Prop([{ type: Types.ObjectId, ref: 'User' }])
+  likedBy: Types.ObjectId[];
+
   @Prop({ default: false })
   forSale: boolean;
 

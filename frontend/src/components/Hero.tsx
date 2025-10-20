@@ -58,15 +58,15 @@ const Hero: React.FC = () => {
       <div className="hero-overlay" />
 
       <div className="hero-content px-4 sm:px-6 lg:px-8 mt-12 sm:mt-8 md:mt-0 relative z-30 w-full max-w-4xl mx-auto">
-        <h1 className="hero-title text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl mb-3 sm:mb-4 md:mb-6 leading-tight text-center">
+        <h1 className="hero-title text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl mb-3 sm:mb-4 md:mb-6 leading-tight text-center animate-fadeInUp">
           Discover the Soul of Ethiopia
         </h1>
-        <p className="hero-sub text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl mb-4 sm:mb-6 md:mb-8 max-w-xs xs:max-w-sm sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto px-2 sm:px-4 md:px-0 text-center leading-relaxed">
+        <p className="hero-sub text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl mb-4 sm:mb-6 md:mb-8 max-w-xs xs:max-w-sm sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto px-2 sm:px-4 md:px-0 text-center leading-relaxed animate-slideInLeft">
           Your gateway to the rich tapestry of Ethiopian culture. Explore, buy, and sell unique traditional arts, paintings, and crafts.
         </p>
 
         <div className="text-center">
-          <a className="cta inline-block px-3 xs:px-4 sm:px-6 lg:px-8 py-2 xs:py-2 sm:py-3 lg:py-4 text-xs xs:text-sm sm:text-base lg:text-lg" href="/collections">
+          <a className="cta inline-block px-3 xs:px-4 sm:px-6 lg:px-8 py-2 xs:py-2 sm:py-3 lg:py-4 text-xs xs:text-sm sm:text-base lg:text-lg animate-slideInRight" href="/collections">
             Explore Collection
           </a>
         </div>

@@ -22,7 +22,7 @@ export class ArtworksService {
 
   async findAll() {
     try {
-      return await this.artworkModel.find().populate('artist', 'name email').exec();
+      return await this.artworkModel.find().populate('artist', 'username email').populate('comments.user', 'username').exec();
     } catch (error: any) {
       throw new InternalServerErrorException('Failed to fetch artworks');
     }
@@ -32,8 +32,8 @@ export class ArtworksService {
     try {
       const artwork = await this.artworkModel
         .findById(id)
-        .populate('artist', 'name email')
-        .populate('comments.user', 'name')
+        .populate('artist', 'username email')
+        .populate('comments.user', 'username')
         .exec();
       if (!artwork) throw new NotFoundException('Artwork not found');
       return artwork;
@@ -43,11 +43,35 @@ export class ArtworksService {
     }
   }
 
-  async like(id: string) {
+  async toggleLike(id: string, userId: string) {
     try {
-      return await this.artworkModel.findByIdAndUpdate(id, { $inc: { likes: 1 } }, { new: true });
+      const artwork = await this.artworkModel.findById(id);
+      if (!artwork) throw new NotFoundException('Artwork not found');
+      
+      const hasLiked = artwork.likedBy?.includes(userId as any);
+      
+      if (hasLiked) {
+        return await this.artworkModel.findByIdAndUpdate(
+          id,
+          { 
+            $pull: { likedBy: userId },
+            $inc: { likes: -1 }
+          },
+          { new: true }
+        ).populate('artist', 'username email').populate('comments.user', 'username');
+      } else {
+        return await this.artworkModel.findByIdAndUpdate(
+          id,
+          { 
+            $addToSet: { likedBy: userId },
+            $inc: { likes: 1 }
+          },
+          { new: true }
+        ).populate('artist', 'username email').populate('comments.user', 'username');
+      }
     } catch (error: any) {
-      throw new InternalServerErrorException('Failed to like artwork');
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException('Failed to toggle like');
     }
   }
 
@@ -59,7 +83,8 @@ export class ArtworksService {
           { $push: { comments: { user: userId, text, createdAt: new Date() } } },
           { new: true }
         )
-        .populate('comments.user', 'name');
+        .populate('artist', 'username email')
+        .populate('comments.user', 'username');
     } catch (error: any) {
       throw new InternalServerErrorException('Failed to add comment');
     }

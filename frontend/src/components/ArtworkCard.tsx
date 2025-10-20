@@ -5,7 +5,7 @@ import { Artwork, api } from '../lib/api';
 
 interface ArtworkCardProps {
   artwork: Artwork;
-  currentUser?: { _id: string };
+  currentUser?: { _id?: string; id?: string };
   onUpdate: () => void;
 }
 
@@ -60,7 +60,8 @@ export default function ArtworkCard({ artwork, currentUser, onUpdate }: ArtworkC
     }
   };
 
-  const isOwner = currentUser?._id === artwork.artist._id;
+  const isOwner = currentUser && (currentUser._id === artwork.artist._id || currentUser.id === artwork.artist._id);
+  const hasLiked = currentUser && artwork.likedBy?.includes(currentUser._id || currentUser.id || '');
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -99,9 +100,13 @@ export default function ArtworkCard({ artwork, currentUser, onUpdate }: ArtworkC
           <button 
             onClick={handleLike}
             disabled={!currentUser}
-            className="flex items-center gap-2 text-red-500 hover:text-red-600 disabled:opacity-50"
+            className={`flex items-center gap-2 transition-colors disabled:opacity-50 ${
+              hasLiked 
+                ? 'text-red-500 hover:text-red-600' 
+                : 'text-gray-400 hover:text-red-500'
+            }`}
           >
-            ❤️ {artwork.likes}
+            {hasLiked ? '❤️' : '🤍'} {artwork.likes}
           </button>
           
           <button 

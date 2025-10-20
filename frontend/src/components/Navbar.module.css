@@ -1,0 +1,29 @@
+.navbar {
+  background: transparent;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.navbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+}
+
+.nav-links a {
+  color: var(--foreground) !important;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: var(--accent) !important;
+}
+
+.nav-actions .btn {
+  transition: all 0.3s ease;
+}
+
+.welcome-text {
+  color: var(--muted) !important;
+}

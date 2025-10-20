@@ -44,13 +44,13 @@ const Collection: React.FC = () => {
   return (
     <section className={`${styles.section} py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8`} aria-labelledby="collection-heading">
       <div className={`${styles.container} max-w-6xl mx-auto`}>
-        <h2 id="collection-heading" className={`${styles.heading} text-2xl sm:text-3xl lg:text-4xl text-center mb-8 sm:mb-12`}>
+        <h2 id="collection-heading" className={`${styles.heading} text-2xl sm:text-3xl lg:text-4xl text-center mb-8 sm:mb-12 animate-fadeInUp`}>
           Explore Our Collection
         </h2>
 
         <div className={`${styles.grid} grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8`} role="list">
-          {cards.map((card) => (
-            <article className={`${styles.card} bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 w-full max-w-sm mx-auto sm:max-w-none`} key={card.title} role="listitem">
+          {cards.map((card, index) => (
+            <article className={`${styles.card} bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 w-full max-w-sm mx-auto sm:max-w-none ${index % 2 === 0 ? 'animate-slideInLeft' : 'animate-slideInRight'}`} key={card.title} role="listitem">
               <div className={`${styles.media} relative aspect-[4/3] w-full`}>
                 {/* Using fill to cover the card area; container provides aspect ratio */}
                 <Image

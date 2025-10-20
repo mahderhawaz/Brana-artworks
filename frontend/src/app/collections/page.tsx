@@ -3,6 +3,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+import ThemeToggle from "../../components/ThemeToggle";
 import "../../styles/globals.css";
 
 const categories = [
@@ -58,16 +59,17 @@ export default function CollectionsPage() {
             <Image src="/assets/logo.png" alt="BRANA Arts" width={60} height={60} priority className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-18 lg:h-18 xl:w-20 xl:h-20 rounded-full object-cover" />
           </div>
 
-          <nav style={{ display: "flex", gap: 16, alignItems: "center", fontSize: 15, position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
-            <Link href="/" style={{ color: "#a65b2b", textDecoration: "none" }}>Home</Link>
-            <Link href="/collections" style={{ color: "#a65b2b", textDecoration: "none", fontWeight: "bold" }}>Our Collections</Link>
-            <Link href="/#about" style={{ color: "#a65b2b", textDecoration: "none" }}>About Us</Link>
-            <Link href="/#contact" style={{ color: "#a65b2b", textDecoration: "none" }}>Contact</Link>
+          <nav className="nav-links" style={{ display: "flex", gap: 16, alignItems: "center", fontSize: 15, position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
+            <Link href="/" className="nav-link">Home</Link>
+            <Link href="/collections" className="nav-link active">Our Collections</Link>
+            <Link href="/#about" className="nav-link">About Us</Link>
+            <Link href="/#contact" className="nav-link">Contact</Link>
           </nav>
 
-          <div style={{ display: "flex", gap: "8px" }}>
-            <Link href="/signup" style={{ background: "#a65b2b", color: "#fff", padding: "7px 12px", borderRadius: 8, textDecoration: "none" }}>Sign Up</Link>
-            <Link href="/login" style={{ background: "#a65b2b", color: "#fff", padding: "7px 12px", borderRadius: 8, textDecoration: "none" }}>Log in</Link>
+          <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+            <ThemeToggle />
+            <Link href="/signup" className="auth-btn">Sign Up</Link>
+            <Link href="/login" className="auth-btn">Log in</Link>
           </div>
         </div>
       </header>
@@ -114,11 +116,11 @@ export default function CollectionsPage() {
                       style={{ objectFit: "cover" }}
                     />
                   </div>
-                  <div style={{ padding: "16px" }}>
-                    <h3 style={{ fontSize: "1.1rem", fontWeight: "600", color: "#5a2f15", marginBottom: "8px" }}>
+                  <div className="card-content" style={{ padding: "16px" }}>
+                    <h3 className="card-title" style={{ fontSize: "1.1rem", fontWeight: "600", color: "#5a2f15", marginBottom: "8px" }}>
                       {category.name} #{imageIndex + 1}
                     </h3>
-                    <p style={{ color: "#6b625d", fontSize: "0.9rem" }}>
+                    <p className="card-description" style={{ color: "#6b625d", fontSize: "0.9rem" }}>
                       Authentic Ethiopian {category.name.toLowerCase()} crafted by local artisans.
                     </p>
                   </div>
@@ -128,6 +130,69 @@ export default function CollectionsPage() {
           </section>
         ))}
       </main>
+
+      <style jsx global>{`
+        .nav-link {
+          color: #a65b2b !important;
+          text-decoration: none;
+          transition: color 0.2s ease;
+        }
+        
+        :root:not(.dark) .nav-link {
+          color: #a65b2b !important;
+        }
+        
+        .nav-link.active {
+          font-weight: bold;
+        }
+        
+        .auth-btn {
+          background: #a65b2b;
+          color: #fff;
+          padding: 7px 12px;
+          border-radius: 8px;
+          text-decoration: none;
+          transition: background 0.2s ease;
+        }
+        
+        header {
+          background: #fbfaf8 !important;
+        }
+        
+        :root.dark .nav-link {
+          color: white !important;
+        }
+        
+        :root.dark .auth-btn {
+          background: #a65b2b !important;
+          color: white !important;
+        }
+        
+        :root.dark header {
+          background: #3d2914 !important;
+          border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+        }
+        
+        :root.dark main {
+          background: #3d2914 !important;
+        }
+        
+        :root.dark .card-content {
+          background: #3d2914 !important;
+        }
+        
+        :root.dark h1, :root.dark h2, :root.dark h3, :root.dark p {
+          color: white !important;
+        }
+        
+        :root.dark .card-title {
+          color: white !important;
+        }
+        
+        :root.dark .card-description {
+          color: #e5e5e5 !important;
+        }
+      `}</style>
     </>
   );
 }

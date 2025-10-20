@@ -24,8 +24,8 @@ export class ArtworksController {
 
   @UseGuards(JwtAuthGuard)
   @Put(':id/like')
-  async like(@Param('id') id: string) {
-    return this.artworksService.like(id);
+  async like(@Param('id') id: string, @Request() req) {
+    return this.artworksService.toggleLike(id, req.user.userId);
   }
 
   @UseGuards(JwtAuthGuard)

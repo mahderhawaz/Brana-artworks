@@ -21,6 +21,7 @@ export interface Artwork {
   imageUrl: string;
   artist: User;
   likes: number;
+  likedBy?: string[];
   forSale: boolean;
   price?: number;
   owner?: User;
