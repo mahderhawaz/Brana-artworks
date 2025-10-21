@@ -5,6 +5,7 @@ import Image from "next/image"
 import { useState, useEffect } from "react"
 import DashboardSidebar from "../../components/DashboardSidebar"
 import ThemeToggle from "../../components/ThemeToggle"
+import MobileNav from "../../components/MobileNav"
 import DefaultAvatar from "../../components/DefaultAvatar"
 import PageTransition from "../../components/PageTransition"
 import { api, Artwork, User } from "../../lib/api"
@@ -163,6 +164,7 @@ export default function MyArtworksPage() {
                 <DefaultAvatar size={36} />
               )}
             </div>
+            <MobileNav isDashboard={true} />
           </div>
         </header>
 
@@ -638,13 +640,16 @@ export default function MyArtworksPage() {
           .topnav{ padding: 12px 16px; }
           .centerlinks{ gap: 16px; }
         }
+        @media (max-width: 768px){
+          .centerlinks{ display: none; }
+        }
+        
         @media (max-width: 480px){
           .card{ min-width: 180px; width: 180px; height: 140px; }
           .media{ height: 140px; }
           h1{ font-size: 24px; }
           .main{ padding: 24px 16px 60px; }
           .topnav{ flex-wrap: wrap; gap: 12px; }
-          .centerlinks{ display: none; }
           .pagination{ gap: 4px; }
           .pageNum{ width: 36px; height: 36px; font-size: 12px; }
           .scrollBtn{ width: 35px; height: 35px; font-size: 16px; }

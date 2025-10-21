@@ -5,6 +5,7 @@ import Image from "next/image";
 import React, { useState, useRef, useEffect } from "react";
 import DashboardSidebar from "../../components/DashboardSidebar";
 import ThemeToggle from "../../components/ThemeToggle";
+import MobileNav from "../../components/MobileNav";
 import DefaultAvatar from "../../components/DefaultAvatar";
 import PageTransition from "../../components/PageTransition";
 import { api, User } from "../../lib/api";
@@ -132,6 +133,7 @@ export default function SettingsPage() {
               <DefaultAvatar size={36} />
             )}
           </div>
+          <MobileNav isDashboard={true} />
         </div>
       </header>
 
@@ -550,6 +552,10 @@ export default function SettingsPage() {
         .button.primary{ background:var(--accent); color:#fff !important; box-shadow: 0 6px 18px rgba(166,91,43,0.12); }
 
         /* responsive */
+        @media (max-width: 768px) {
+          .centerlinks { display: none; }
+        }
+        
         @media (max-width: 860px){
           .pwRow{ flex-direction: column; }
           .toggleRow{ flex-direction: column; align-items:flex-start; }

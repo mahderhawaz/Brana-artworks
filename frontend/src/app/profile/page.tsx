@@ -5,6 +5,7 @@ import Image from "next/image";
 import React, { useRef, useState, useEffect } from "react";
 import DashboardSidebar from "../../components/DashboardSidebar";
 import ThemeToggle from "../../components/ThemeToggle";
+import MobileNav from "../../components/MobileNav";
 import DefaultAvatar from "../../components/DefaultAvatar";
 import PageTransition from "../../components/PageTransition";
 import { api, User } from "../../lib/api";
@@ -153,6 +154,7 @@ export default function ProfileSettingsPage() {
               <DefaultAvatar size={36} />
             )}
           </div>
+          <MobileNav isDashboard={true} />
         </div>
       </header>
 
@@ -482,6 +484,10 @@ export default function ProfileSettingsPage() {
         .saveBtn[disabled] { opacity: 0.7; cursor:not-allowed; }
 
         /* responsive */
+        @media (max-width: 768px) {
+          .centerlinks { display: none; }
+        }
+        
         @media (max-width: 860px) {
           .section { grid-template-columns: 1fr; }
           .labelCol { order: 1; }

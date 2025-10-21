@@ -5,6 +5,7 @@ import Image from "next/image";
 import React, { useMemo, useState, useEffect } from "react";
 import DashboardSidebar from "../../components/DashboardSidebar";
 import ThemeToggle from "../../components/ThemeToggle";
+import MobileNav from "../../components/MobileNav";
 import DefaultAvatar from "../../components/DefaultAvatar";
 import PageTransition from "../../components/PageTransition";
 import { api, User } from "../../lib/api";
@@ -123,6 +124,7 @@ export default function SalesPage() {
                 <DefaultAvatar size={36} />
               )}
             </div>
+            <MobileNav isDashboard={true} />
           </div>
         </header>
 
@@ -492,6 +494,10 @@ export default function SalesPage() {
         .pgNum.active { background: var(--accent); color:#fff; border-color: transparent; box-shadow: 0 6px 18px rgba(166,91,43,0.12); }
 
         /* responsive */
+        @media (max-width: 768px) {
+          .centerlinks { display: none; }
+        }
+        
         @media (max-width: 900px) {
           .tableHead .row.head, .tableBody .row { grid-template-columns: 1.8fr 1.6fr 1fr 1fr 0.9fr; }
         }

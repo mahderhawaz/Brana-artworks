@@ -1,16 +1,27 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import ThemeToggle from './ThemeToggle';
+import { api } from '../lib/api';
 
 interface SidebarProps {
   activePage?: string;
 }
 
 const DashboardSidebar: React.FC<SidebarProps> = ({ activePage = "Home" }) => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const handleLogout = () => {
+    api.logout();
+    window.location.href = '/';
+  };
+
   return (
-    <aside className="sidebar" aria-label="Artist navigation">
+    <>
+      {/* Sidebar */}
+      <aside className="sidebar" aria-label="Artist navigation">
       <div className="brand">
         <Image src="/assets/logo.png" alt="BRANA Arts logo" width={80} height={80} priority className="logo" style={{ borderRadius: '50%', objectFit: 'cover' }} />
         <div className="brandSub">Artist Dashboard</div>
@@ -138,6 +149,8 @@ const DashboardSidebar: React.FC<SidebarProps> = ({ activePage = "Home" }) => {
           justify-content: space-between;
         }
         
+
+        
         .brand {
           display: flex;
           flex-direction: column;
@@ -208,8 +221,49 @@ const DashboardSidebar: React.FC<SidebarProps> = ({ activePage = "Home" }) => {
           padding: 8px 10px;
           border-radius: 8px;
         }
+        
+        /* Mobile responsive styles */
+        @media (max-width: 768px) {
+          .sidebar {
+            width: 120px;
+            min-width: 120px;
+            padding: 12px 8px;
+          }
+          
+          .logo {
+            width: 40px !important;
+            height: 40px !important;
+          }
+          
+          .brandSub {
+            font-size: 8px !important;
+            margin-top: 4px !important;
+          }
+          
+          .item {
+            padding: 4px 6px !important;
+            font-size: 10px !important;
+            gap: 6px !important;
+          }
+          
+          .icon {
+            font-size: 12px !important;
+          }
+          
+          .smallItem {
+            padding: 3px 4px !important;
+            font-size: 9px !important;
+            gap: 4px !important;
+          }
+          
+          .bottom {
+            gap: 6px !important;
+            margin-top: 16px !important;
+          }
+        }
       `}</style>
     </aside>
+    </>
   );
 };
 

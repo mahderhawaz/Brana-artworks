@@ -99,7 +99,6 @@ export default function DashboardPage() {
             </nav>
             <div className="right">
               <ThemeToggle />
-              <MobileNav isDashboard={true} />
               <button className="iconBtn" aria-label="Notifications">🔔</button>
               <div className="avatar">
                 {user?.profilePicture ? (
@@ -114,6 +113,7 @@ export default function DashboardPage() {
                   <DefaultAvatar size={36} />
                 )}
               </div>
+              <MobileNav isDashboard={true} />
             </div>
           </header>
           
@@ -559,6 +559,9 @@ export default function DashboardPage() {
           .centerlinks {
             display: none;
           }
+          .right {
+            position: relative;
+          }
           .main {
             padding: 16px 20px;
           }
@@ -592,21 +595,33 @@ export default function DashboardPage() {
         
         @media (max-width: 480px) {
           .main {
-            padding: 12px 16px;
+            padding: 8px 12px;
           }
           h1 {
-            font-size: 24px;
+            font-size: 20px;
           }
           .grid, .loadingGrid {
             grid-template-columns: 1fr;
-            gap: 10px;
-          }
-          .right {
             gap: 8px;
           }
+          .right {
+            gap: 6px;
+          }
           .viewAll, .upload {
-            padding: 6px 12px;
-            font-size: 14px;
+            padding: 4px 8px;
+            font-size: 12px;
+          }
+          .statCard {
+            padding: 8px 10px;
+          }
+          .value {
+            font-size: 16px;
+          }
+          .artCard .media {
+            height: 120px;
+          }
+          .topnav {
+            padding: 8px 12px;
           }
         }
         

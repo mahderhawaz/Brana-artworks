@@ -5,6 +5,7 @@ import Image from "next/image";
 import React, { useRef, useState, useEffect } from "react";
 import DashboardSidebar from "../../components/DashboardSidebar";
 import ThemeToggle from "../../components/ThemeToggle";
+import MobileNav from "../../components/MobileNav";
 import DefaultAvatar from "../../components/DefaultAvatar";
 import PageTransition from "../../components/PageTransition";
 import { api, User } from "../../lib/api";
@@ -194,6 +195,7 @@ export default function UploadArtworkPage() {
                 <DefaultAvatar size={36} />
               )}
             </div>
+            <MobileNav isDashboard={true} />
           </div>
         </header>
 
@@ -605,6 +607,10 @@ export default function UploadArtworkPage() {
         .inputError{ border-color: rgba(183,67,55,0.12) !important; }
 
         /* responsiveness */
+        @media (max-width: 768px) {
+          .centerlinks { display: none; }
+        }
+        
         @media (max-width: 740px){
           .row{ flex-direction: column; }
           .preview{ display:none; }

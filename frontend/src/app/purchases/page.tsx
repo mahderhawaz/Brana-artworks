@@ -5,6 +5,7 @@ import Image from "next/image";
 import React, { useMemo, useState, useEffect } from "react";
 import DashboardSidebar from "../../components/DashboardSidebar";
 import ThemeToggle from "../../components/ThemeToggle";
+import MobileNav from "../../components/MobileNav";
 import DefaultAvatar from "../../components/DefaultAvatar";
 import PageTransition from "../../components/PageTransition";
 import { api, User } from "../../lib/api";
@@ -118,6 +119,7 @@ export default function PurchasesPage() {
                 <DefaultAvatar size={36} />
               )}
             </div>
+            <MobileNav isDashboard={true} />
           </div>
         </header>
 
@@ -472,6 +474,10 @@ export default function PurchasesPage() {
         .srOnly { position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden; }
 
         /* responsive */
+        @media (max-width: 768px) {
+          .centerlinks { display: none; }
+        }
+        
         @media (max-width: 900px) {
           .tableHead .row.head, .tableBody .row { grid-template-columns: 1.8fr 1fr 1fr 1fr 1fr 0.8fr; }
         }

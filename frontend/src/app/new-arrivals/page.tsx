@@ -14,6 +14,7 @@ export default function NewArrivals() {
   const [loading, setLoading] = useState(true);
   const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
   const [user, setUser] = useState<User | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -94,12 +95,12 @@ export default function NewArrivals() {
       </Head>
 
       <header style={{ borderBottom: "1px solid rgba(0,0,0,0.06)", background: "#fbfaf8" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "10px 20px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "10px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <Image src="/assets/logo.png" alt="BRANA Arts" width={60} height={60} priority className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-18 lg:h-18 xl:w-20 xl:h-20 rounded-full object-cover" />
           </div>
 
-          <nav className="nav-links" style={{ display: "flex", gap: 16, alignItems: "center", fontSize: 15, position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
+          <nav className="nav-links hidden md:flex" style={{ gap: 16, alignItems: "center", fontSize: 15, position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
             <Link href="/" className="nav-link">Home</Link>
             <Link href="/collections" className="nav-link">Our Collections</Link>
             <Link href="/about" className="nav-link">About Us</Link>
@@ -107,13 +108,45 @@ export default function NewArrivals() {
             <Link href="/contact" className="nav-link">Contact</Link>
           </nav>
 
-          <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+          <div className="hidden md:flex" style={{ gap: "8px", alignItems: "center" }}>
             <ThemeToggle />
             <Link href="/signup" className="auth-btn">Sign Up</Link>
             <Link href="/login" className="auth-btn">Log in</Link>
           </div>
+          
+          {/* Mobile Menu Button */}
+          <button 
+            className="md:hidden flex flex-col justify-center items-center w-8 h-8 space-y-1"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            <span className={`block w-6 h-0.5 bg-current transition-transform ${mobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
+            <span className={`block w-6 h-0.5 bg-current transition-opacity ${mobileMenuOpen ? 'opacity-0' : ''}`}></span>
+            <span className={`block w-6 h-0.5 bg-current transition-transform ${mobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
+          </button>
         </div>
       </header>
+      
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed top-[70px] left-0 right-0 bg-white shadow-lg z-50 border-t mobile-menu">
+          <div className="px-4 py-6 space-y-4">
+            <Link href="/" className="block py-2 text-gray-700 hover:text-amber-600" onClick={() => setMobileMenuOpen(false)}>Home</Link>
+            <Link href="/collections" className="block py-2 text-gray-700 hover:text-amber-600" onClick={() => setMobileMenuOpen(false)}>Our Collections</Link>
+            <Link href="/about" className="block py-2 text-gray-700 hover:text-amber-600" onClick={() => setMobileMenuOpen(false)}>About Us</Link>
+            <Link href="/new-arrivals" className="block py-2 text-amber-600 font-semibold" onClick={() => setMobileMenuOpen(false)}>New Arrivals</Link>
+            <Link href="/contact" className="block py-2 text-gray-700 hover:text-amber-600" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
+            
+            <div className="pt-4 border-t border-gray-200 space-y-3">
+              <div className="flex justify-center mb-3">
+                <ThemeToggle />
+              </div>
+              <Link href="/signup" className="block bg-amber-600 text-white text-center py-2 px-4 rounded hover:bg-amber-700" onClick={() => setMobileMenuOpen(false)}>Sign Up</Link>
+              <Link href="/login" className="block border border-amber-600 text-amber-600 text-center py-2 px-4 rounded hover:bg-amber-50" onClick={() => setMobileMenuOpen(false)}>Log In</Link>
+            </div>
+          </div>
+        </div>
+      )}
 
       <section className="section">
         <div className="container">
@@ -235,7 +268,7 @@ export default function NewArrivals() {
 
         .grid {
           display: grid;
-          grid-template-columns: repeat(4, 1fr);
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
           gap: 22px;
           align-items: start;
         }
@@ -378,20 +411,44 @@ export default function NewArrivals() {
           margin: 0;
         }
 
-        @media (max-width: 1100px) {
+        @media (max-width: 1200px) {
           .grid {
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
           }
         }
+        
+        @media (max-width: 900px) {
+          .grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+          }
+        }
+        
         @media (max-width: 640px) {
           .heading {
             font-size: 26px;
           }
           .grid {
             grid-template-columns: 1fr;
+            gap: 16px;
           }
           .media {
-            padding-top: 56%;
+            padding-top: 60%;
+          }
+          .section {
+            padding: 40px 16px;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .section {
+            padding: 32px 12px;
+          }
+          .heading {
+            font-size: 24px;
+          }
+          .subtitle {
+            font-size: 16px;
           }
         }
 
@@ -450,6 +507,24 @@ export default function NewArrivals() {
         
         :root.dark .card {
           background: #4a3319 !important;
+        }
+        
+        /* Mobile Menu Dark Theme */
+        :root.dark .mobile-menu {
+          background: #3d2914 !important;
+          border-color: rgba(255,255,255,0.1) !important;
+        }
+        
+        :root.dark .mobile-menu a {
+          color: white !important;
+        }
+        
+        :root.dark .mobile-menu a:hover {
+          color: #a65b2b !important;
+        }
+        
+        :root.dark .mobile-menu .border-gray-200 {
+          border-color: rgba(255,255,255,0.1) !important;
         }
       `}</style>
     </>

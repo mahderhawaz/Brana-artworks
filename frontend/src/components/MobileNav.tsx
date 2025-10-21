@@ -32,13 +32,13 @@ const MobileNav: React.FC<MobileNavProps> = ({ isDashboard = false }) => {
         <nav className="mobile-nav">
           {isDashboard ? (
             <>
+              <Link href="/" onClick={toggleMenu}>Home</Link>
+              <Link href="/collections" onClick={toggleMenu}>Explore</Link>
               <Link href="/dashboard" onClick={toggleMenu}>Dashboard</Link>
               <Link href="/my-artworks" onClick={toggleMenu}>My Artworks</Link>
-              <Link href="/upload-artwork" onClick={toggleMenu}>Upload</Link>
-              <Link href="/sales" onClick={toggleMenu}>Sales</Link>
-              <Link href="/purchases" onClick={toggleMenu}>Purchases</Link>
-              <Link href="/profile" onClick={toggleMenu}>Profile</Link>
-              <Link href="/settings" onClick={toggleMenu}>Settings</Link>
+              <div className="mobile-icons">
+                <button className="icon-btn" aria-label="Notifications">🔔</button>
+              </div>
             </>
           ) : (
             <>
@@ -158,6 +158,31 @@ const MobileNav: React.FC<MobileNavProps> = ({ isDashboard = false }) => {
 
         :root.dark .mobile-nav a:hover {
           color: #f4e4bc;
+        }
+
+        .mobile-icons {
+          display: flex;
+          justify-content: center;
+          padding: 20px 0;
+          margin-top: 10px;
+          border-top: 1px solid rgba(166, 91, 43, 0.1);
+        }
+
+        :root.dark .mobile-icons {
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .icon-btn {
+          background: none;
+          border: none;
+          font-size: 20px;
+          cursor: pointer;
+          color: #a65b2b;
+          padding: 8px;
+        }
+
+        :root.dark .icon-btn {
+          color: white;
         }
 
         @media (max-width: 768px) {

@@ -3,11 +3,14 @@
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from 'react';
 import ResetPasswordForm from "../../components/ResetPasswordForm";
 import ThemeToggle from "../../components/ThemeToggle";
 import "../../styles/globals.css";
 
 export default function ResetPasswordPage() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
   return (
     <>
       <Head>
@@ -16,24 +19,52 @@ export default function ResetPasswordPage() {
       </Head>
 
       <header style={{ borderBottom: "1px solid rgba(0,0,0,0.06)", background: "#fbfaf8" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "10px 20px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "10px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <Image src="/assets/logo.png" alt="BRANA Arts" width={60} height={60} priority className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-18 lg:h-18 xl:w-20 xl:h-20 rounded-full object-cover" />
           </div>
 
-          <nav className="nav-links" style={{ display: "flex", gap: 16, alignItems: "center", fontSize: 15, position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
+          <nav className="nav-links hidden md:flex" style={{ gap: 16, alignItems: "center", fontSize: 15, position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
             <Link href="/#hero" className="nav-link">Home</Link>
             <Link href="/#collection" className="nav-link">Our Collections</Link>
             <Link href="/#about" className="nav-link">About Us</Link>
             <Link href="/#contact" className="nav-link">Contact</Link>
           </nav>
 
-          <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+          <div className="hidden md:flex" style={{ gap: "8px", alignItems: "center" }}>
             <ThemeToggle />
             <Link href="/login" className="auth-btn">Log in</Link>
           </div>
+          
+          <button 
+            className="md:hidden flex flex-col justify-center items-center w-8 h-8 space-y-1"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            <span className={`block w-6 h-0.5 bg-current transition-transform ${mobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
+            <span className={`block w-6 h-0.5 bg-current transition-opacity ${mobileMenuOpen ? 'opacity-0' : ''}`}></span>
+            <span className={`block w-6 h-0.5 bg-current transition-transform ${mobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
+          </button>
         </div>
       </header>
+      
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed top-[70px] left-0 right-0 bg-white shadow-lg z-50 border-t mobile-menu">
+          <div className="px-4 py-6 space-y-4">
+            <Link href="/" className="block py-2 text-gray-700 hover:text-amber-600" onClick={() => setMobileMenuOpen(false)}>Home</Link>
+            <Link href="/collections" className="block py-2 text-gray-700 hover:text-amber-600" onClick={() => setMobileMenuOpen(false)}>Our Collections</Link>
+            <Link href="/about" className="block py-2 text-gray-700 hover:text-amber-600" onClick={() => setMobileMenuOpen(false)}>About Us</Link>
+            <Link href="/contact" className="block py-2 text-gray-700 hover:text-amber-600" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
+            
+            <div className="pt-4 border-t border-gray-200 space-y-3">
+              <div className="flex justify-center mb-3">
+                <ThemeToggle />
+              </div>
+              <Link href="/login" className="block bg-amber-600 text-white text-center py-2 px-4 rounded hover:bg-amber-700" onClick={() => setMobileMenuOpen(false)}>Log In</Link>
+            </div>
+          </div>
+        </div>
+      )}
 
       <main>
         <ResetPasswordForm />
@@ -118,6 +149,29 @@ export default function ResetPasswordPage() {
         
         :root.dark a {
           color: #d4b896 !important;
+        }
+        
+        :root.dark .mobile-menu {
+          background: #3d2914 !important;
+          border-color: rgba(255,255,255,0.1) !important;
+        }
+        
+        :root.dark .mobile-menu a {
+          color: white !important;
+        }
+        
+        :root.dark .mobile-menu a:hover {
+          color: #a65b2b !important;
+        }
+        
+        :root.dark .mobile-menu .border-gray-200 {
+          border-color: rgba(255,255,255,0.1) !important;
+        }
+        
+        @media (max-width: 768px) {
+          .nav-links {
+            display: none !important;
+          }
         }
       `}</style>
     </>

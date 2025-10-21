@@ -3,11 +3,13 @@
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from 'react';
 import ThemeToggle from "../../components/ThemeToggle";
-import MobileNav from "../../components/MobileNav";
 import "../../styles/globals.css";
 
 export default function AboutPage() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
   return (
     <>
       <Head>
@@ -16,32 +18,62 @@ export default function AboutPage() {
       </Head>
 
       <header style={{ borderBottom: "1px solid rgba(0,0,0,0.06)", background: "#fbfaf8" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "10px 20px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "10px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <Image src="/assets/logo.png" alt="BRANA Arts" width={60} height={60} priority className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-18 lg:h-18 xl:w-20 xl:h-20 rounded-full object-cover" />
           </div>
 
-          <nav className="nav-links" style={{ display: "flex", gap: 16, alignItems: "center", fontSize: 15, position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
+          <nav className="nav-links hidden md:flex" style={{ gap: 16, alignItems: "center", fontSize: 15, position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
             <Link href="/" className="nav-link">Home</Link>
             <Link href="/collections" className="nav-link">Our Collections</Link>
             <Link href="/about" className="nav-link active">About Us</Link>
             <Link href="/contact" className="nav-link">Contact</Link>
           </nav>
 
-          <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+          <div className="hidden md:flex" style={{ gap: "8px", alignItems: "center" }}>
             <ThemeToggle />
-            <MobileNav />
             <Link href="/signup" className="auth-btn">Sign Up</Link>
             <Link href="/login" className="auth-btn">Log in</Link>
           </div>
+          
+          {/* Mobile Menu Button */}
+          <button 
+            className="md:hidden flex flex-col justify-center items-center w-8 h-8 space-y-1"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            <span className={`block w-6 h-0.5 bg-current transition-transform ${mobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
+            <span className={`block w-6 h-0.5 bg-current transition-opacity ${mobileMenuOpen ? 'opacity-0' : ''}`}></span>
+            <span className={`block w-6 h-0.5 bg-current transition-transform ${mobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
+          </button>
         </div>
       </header>
+      
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed top-[70px] left-0 right-0 bg-white shadow-lg z-50 border-t mobile-menu">
+          <div className="px-4 py-6 space-y-4">
+            <Link href="/" className="block py-2 text-gray-700 hover:text-amber-600" onClick={() => setMobileMenuOpen(false)}>Home</Link>
+            <Link href="/collections" className="block py-2 text-gray-700 hover:text-amber-600" onClick={() => setMobileMenuOpen(false)}>Our Collections</Link>
+            <Link href="/about" className="block py-2 text-amber-600 font-semibold" onClick={() => setMobileMenuOpen(false)}>About Us</Link>
+            <Link href="/contact" className="block py-2 text-gray-700 hover:text-amber-600" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
+            
+            <div className="pt-4 border-t border-gray-200 space-y-3">
+              <div className="flex justify-center mb-3">
+                <ThemeToggle />
+              </div>
+              <Link href="/signup" className="block bg-amber-600 text-white text-center py-2 px-4 rounded hover:bg-amber-700" onClick={() => setMobileMenuOpen(false)}>Sign Up</Link>
+              <Link href="/login" className="block border border-amber-600 text-amber-600 text-center py-2 px-4 rounded hover:bg-amber-50" onClick={() => setMobileMenuOpen(false)}>Log In</Link>
+            </div>
+          </div>
+        </div>
+      )}
 
-      <main style={{ padding: "40px 20px", maxWidth: "1200px", margin: "0 auto" }}>
+      <main className="main-content" style={{ padding: "40px 20px", maxWidth: "1200px", margin: "0 auto" }}>
         {/* About Us Section */}
         <section style={{ marginBottom: "80px" }}>
-          <div style={{ textAlign: "center", marginBottom: "40px" }}>
-            <h1 style={{ fontFamily: "Playfair Display, serif", fontSize: "2.5rem", color: "#a65b2b", marginBottom: "16px" }}>
+          <div className="header-section" style={{ textAlign: "center", marginBottom: "40px" }}>
+            <h1 className="main-title" style={{ fontFamily: "Playfair Display, serif", fontSize: "clamp(1.8rem, 4vw, 2.5rem)", color: "#a65b2b", marginBottom: "16px" }}>
               About BRANA Arts
             </h1>
             <p style={{ color: "#6b625d", fontSize: "1.1rem", maxWidth: "600px", margin: "0 auto" }}>
@@ -49,7 +81,7 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "40px", alignItems: "center", marginBottom: "60px" }}>
+          <div className="story-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "40px", alignItems: "center", marginBottom: "60px" }}>
             <div>
               <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "2rem", color: "#5a2f15", marginBottom: "20px" }}>
                 Our Story
@@ -81,7 +113,7 @@ export default function AboutPage() {
             <p style={{ color: "#6b625d", fontSize: "1.1rem", lineHeight: "1.7", marginBottom: "30px" }}>
               To preserve, promote, and celebrate Ethiopian artistic heritage while providing a sustainable platform for local artists to showcase their work and connect with collectors worldwide.
             </p>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "30px", marginTop: "40px" }}>
+            <div className="mission-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "30px", marginTop: "40px" }}>
               <div className="mission-card" style={{ padding: "30px", backgroundColor: "white", borderRadius: "12px", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
                 <h3 style={{ color: "#a65b2b", marginBottom: "15px", fontSize: "1.3rem" }}>Preserve Culture</h3>
                 <p style={{ color: "#6b625d", lineHeight: "1.6" }}>
@@ -115,7 +147,7 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "40px" }}>
+          <div className="values-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "40px" }}>
             <div style={{ textAlign: "center" }}>
               <div style={{ width: "80px", height: "80px", backgroundColor: "#a65b2b", borderRadius: "50%", margin: "0 auto 20px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "2rem" }}>
                 🎨
@@ -247,6 +279,86 @@ export default function AboutPage() {
         
         :root.dark .mission-card p {
           color: #e8d5b7 !important;
+        }
+        
+        /* Mobile Menu Dark Theme */
+        :root.dark .mobile-menu {
+          background: #3d2914 !important;
+          border-color: rgba(255,255,255,0.1) !important;
+        }
+        
+        :root.dark .mobile-menu a {
+          color: white !important;
+        }
+        
+        :root.dark .mobile-menu a:hover {
+          color: #a65b2b !important;
+        }
+        
+        :root.dark .mobile-menu .border-gray-200 {
+          border-color: rgba(255,255,255,0.1) !important;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 1024px) {
+          .mission-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 24px !important;
+          }
+          
+          .values-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 32px !important;
+          }
+        }
+        
+        @media (max-width: 768px) {
+          .main-content {
+            padding: 32px 16px !important;
+          }
+          
+          .story-grid {
+            grid-template-columns: 1fr !important;
+            gap: 32px !important;
+          }
+          
+          .mission-grid {
+            grid-template-columns: 1fr !important;
+            gap: 20px !important;
+          }
+          
+          .values-grid {
+            grid-template-columns: 1fr !important;
+            gap: 24px !important;
+          }
+          
+          .nav-links {
+            display: none !important;
+          }
+        }
+        
+        @media (max-width: 640px) {
+          .main-content {
+            padding: 24px 12px !important;
+          }
+          
+          .header-section {
+            margin-bottom: 32px !important;
+          }
+          
+          .story-grid {
+            gap: 24px !important;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .main-content {
+            padding: 20px 8px !important;
+          }
+          
+          .mission-card {
+            padding: 20px !important;
+          }
         }
       `}</style>
     </>

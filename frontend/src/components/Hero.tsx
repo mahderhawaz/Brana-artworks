@@ -71,6 +71,22 @@ const Hero: React.FC = () => {
           </a>
         </div>
       </div>
+      
+      <style jsx global>{`
+        /* Force hamburger button to be visible on mobile in hero section */
+        @media (max-width: 767px) {
+          .hero .navbar button {
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            color: white !important;
+          }
+          
+          .hero .navbar button span {
+            background-color: white !important;
+          }
+        }
+      `}</style>
     </header>
   );
 };
