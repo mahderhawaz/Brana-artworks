@@ -106,6 +106,13 @@ const Navbar: React.FC = () => {
             {/* Public Navigation Links */}
             <Link href="/" className="block text-white hover:text-gray-300 py-2" onClick={() => setIsMenuOpen(false)}>Home</Link>
             <Link href="/collections" className="block text-white hover:text-gray-300 py-2" onClick={() => setIsMenuOpen(false)}>Explore</Link>
+            {!user && (
+              <>
+                <Link href="/new-arrivals" className="block text-white hover:text-gray-300 py-2" onClick={() => setIsMenuOpen(false)}>New Arrivals</Link>
+                <Link href="/about" className="block text-white hover:text-gray-300 py-2" onClick={() => setIsMenuOpen(false)}>About Us</Link>
+                <Link href="/contact" className="block text-white hover:text-gray-300 py-2" onClick={() => setIsMenuOpen(false)}>Contact</Link>
+              </>
+            )}
             
             {/* User-specific items - only show for logged-in users */}
             {user && (
