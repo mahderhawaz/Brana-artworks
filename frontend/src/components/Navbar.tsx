@@ -89,13 +89,13 @@ const Navbar: React.FC = () => {
 
         {/* Mobile Hamburger */}
         <button 
-          className="md:hidden flex flex-col justify-center items-center w-8 h-8 space-y-1"
+          className="md:hidden flex flex-col justify-center items-center w-8 h-8 space-y-1 text-white"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label="Toggle menu"
         >
-          <span className={`block w-6 h-0.5 bg-current transition-transform ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
-          <span className={`block w-6 h-0.5 bg-current transition-opacity ${isMenuOpen ? 'opacity-0' : ''}`}></span>
-          <span className={`block w-6 h-0.5 bg-current transition-transform ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
+          <span className={`block w-6 h-0.5 bg-white transition-transform ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
+          <span className={`block w-6 h-0.5 bg-white transition-opacity ${isMenuOpen ? 'opacity-0' : ''}`}></span>
+          <span className={`block w-6 h-0.5 bg-white transition-transform ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
         </button>
       </div>
 
@@ -193,6 +193,15 @@ if (typeof window !== 'undefined') {
     
     :root:not(.dark) .mobile-menu-container.landing-menu .mobile-menu-content button:hover {
       color: rgba(166, 91, 43, 0.8) !important;
+    }
+    
+    /* Hamburger menu button visibility */
+    :root.dark .navbar button[aria-label="Toggle menu"] span {
+      background-color: white !important;
+    }
+    
+    :root:not(.dark) .navbar button[aria-label="Toggle menu"] span {
+      background-color: white !important;
     }
     
     @media (max-width: 767px) {
