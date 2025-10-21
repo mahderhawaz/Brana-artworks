@@ -286,8 +286,8 @@ export default function NewArrivals() {
 
         .grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-          gap: 22px;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 20px;
           align-items: start;
         }
 
@@ -433,16 +433,20 @@ export default function NewArrivals() {
           margin: 0;
         }
 
-        @media (max-width: 1200px) {
+        @media (max-width: 1024px) {
           .grid {
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
           }
         }
         
-        @media (max-width: 900px) {
+        @media (max-width: 768px) {
           .grid {
             grid-template-columns: repeat(2, 1fr);
-            gap: 18px;
+            gap: 16px;
+          }
+          .section {
+            padding: 40px 16px;
           }
         }
         
@@ -452,13 +456,10 @@ export default function NewArrivals() {
           }
           .grid {
             grid-template-columns: 1fr;
-            gap: 16px;
-          }
-          .media {
-            padding-top: 60%;
+            gap: 14px;
           }
           .section {
-            padding: 40px 16px;
+            padding: 32px 12px;
           }
         }
         

@@ -57,7 +57,7 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-8 lg:gap-12" style={{ marginTop: '20px' }}>
           
           {/* Logo & Brand - Takes 2 columns on XL screens */}
-          <div className="xl:col-span-2 flex flex-col items-center space-y-4 ml-0 md:ml-48 lg:ml-52">
+          <div className="xl:col-span-2 flex flex-col items-center space-y-4">
             <div className="flex items-center justify-center md:justify-start">
               <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden bg-gradient-to-r from-amber-500 to-amber-600 p-1 flex-shrink-0">
                 <Image
@@ -152,11 +152,13 @@ const Footer: React.FC = () => {
         
         footer .max-w-full {
           max-width: 1200px !important;
+          margin: 0 auto !important;
         }
         
         footer .grid {
           display: grid !important;
           grid-template-columns: repeat(1, 1fr) !important;
+          justify-items: center !important;
         }
         
         @media (min-width: 768px) {
