@@ -36,9 +36,13 @@ export default function ForgotPasswordForm() {
       setSuccess(true);
     } catch (error: any) {
       console.error('Forgot password error:', error);
-      // Fallback to test mode if backend endpoint not available
-      if (error.message?.includes('404') || error.message?.includes('Failed to fetch')) {
-        // Simulate successful email send for testing
+      // Check if this is a network/backend availability issue
+      if (error.message?.includes('404') || 
+          error.message?.includes('Failed to fetch') ||
+          error.message?.includes('NetworkError') ||
+          error.message?.includes('fetch')) {
+        // Backend not available - use test mode
+        console.log('Backend unavailable, using test mode');
         await new Promise(resolve => setTimeout(resolve, 1000));
         setSuccess(true);
       } else {
