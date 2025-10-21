@@ -13,6 +13,7 @@ import styles from './Navbar.module.css';
 const Navbar: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDark, setIsDark] = useState(false);
   const pathname = usePathname();
   const isLandingPage = pathname === '/';
   const isDashboardPage = ['/dashboard', '/my-artworks', '/profile', '/purchases', '/sales', '/settings', '/upload-artwork'].includes(pathname);
@@ -29,6 +30,28 @@ const Navbar: React.FC = () => {
         }
       });
     }
+
+    // Theme detection
+    const checkTheme = () => {
+      const saved = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const shouldBeDark = saved === 'dark' || (!saved && prefersDark);
+      setIsDark(shouldBeDark);
+    };
+
+    checkTheme();
+    
+    // Listen for theme changes
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains('dark'));
+    });
+    
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    return () => observer.disconnect();
   }, []);
 
   const handleLogout = () => {
@@ -104,15 +127,21 @@ const Navbar: React.FC = () => {
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label="Toggle menu"
         >
-          <span className={`block w-6 h-0.5 bg-white transition-transform ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
-          <span className={`block w-6 h-0.5 bg-white transition-opacity ${isMenuOpen ? 'opacity-0' : ''}`}></span>
-          <span className={`block w-6 h-0.5 bg-white transition-transform ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
+          <span className={`block w-6 h-0.5 transition-transform ${isMenuOpen ? 'rotate-45 translate-y-2' : ''} ${isDashboardPage ? 'hamburger-dashboard' : 'bg-white'}`}></span>
+          <span className={`block w-6 h-0.5 transition-opacity ${isMenuOpen ? 'opacity-0' : ''} ${isDashboardPage ? 'hamburger-dashboard' : 'bg-white'}`}></span>
+          <span className={`block w-6 h-0.5 transition-transform ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''} ${isDashboardPage ? 'hamburger-dashboard' : 'bg-white'}`}></span>
         </button>
       </div>
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className={`md:hidden absolute top-full left-0 right-0 z-50 mobile-menu-container ${isLandingPage ? 'landing-menu' : 'other-menu'}`}>
+        <div 
+          className={`md:hidden absolute top-full left-0 right-0 z-50 mobile-menu-container ${isDashboardPage ? 'dashboard-transparent' : isLandingPage ? 'landing-menu' : 'other-menu'}`}
+          style={isDashboardPage ? {
+            backgroundColor: 'transparent',
+            backdropFilter: 'none'
+          } : {}}
+        >
           <div className="px-4 py-6 space-y-4 mobile-menu-content">
             {/* Navigation Links */}
             {!isDashboardPage ? (
@@ -128,7 +157,7 @@ const Navbar: React.FC = () => {
                 )}
               </>
             ) : (
-              <Link href="/" className="block text-white hover:text-gray-300 py-2 flex items-center space-x-2" onClick={() => setIsMenuOpen(false)}>
+              <Link href="/" className={`block py-2 flex items-center space-x-2 ${isDark ? 'text-white hover:text-gray-300' : 'text-amber-900 hover:text-amber-700'}`} onClick={() => setIsMenuOpen(false)}>
                 <span>🏠</span><span>Home</span>
               </Link>
             )}
@@ -136,9 +165,9 @@ const Navbar: React.FC = () => {
             {/* User-specific items - only show for logged-in users */}
             {user && (
               <>
-                <Link href="/dashboard" className="block text-white hover:text-gray-300 py-2" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
-                <Link href="/my-artworks" className="block text-white hover:text-gray-300 py-2" onClick={() => setIsMenuOpen(false)}>My Artworks</Link>
-                <button onClick={() => {handleLogout(); setIsMenuOpen(false);}} className="block w-full text-left text-white hover:text-gray-300 py-2">
+                <Link href="/dashboard" className={`block py-2 ${isDashboardPage ? (isDark ? 'text-white hover:text-gray-300' : 'text-amber-900 hover:text-amber-700') : 'text-white hover:text-gray-300'}`} onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
+                <Link href="/my-artworks" className={`block py-2 ${isDashboardPage ? (isDark ? 'text-white hover:text-gray-300' : 'text-amber-900 hover:text-amber-700') : 'text-white hover:text-gray-300'}`} onClick={() => setIsMenuOpen(false)}>My Artworks</Link>
+                <button onClick={() => {handleLogout(); setIsMenuOpen(false);}} className={`block w-full text-left py-2 ${isDashboardPage ? (isDark ? 'text-white hover:text-gray-300' : 'text-amber-900 hover:text-amber-700') : 'text-white hover:text-gray-300'}`}>
                   Logout
                 </button>
               </>
@@ -162,7 +191,7 @@ const Navbar: React.FC = () => {
                     ) : (
                       <DefaultAvatar size={32} />
                     )}
-                    <span className="text-white/80 text-sm">Welcome, {user.username}</span>
+                    <span className={`text-sm ${isDashboardPage ? (isDark ? 'text-white/80' : 'text-amber-900/80') : 'text-white/80'}`}>Welcome, {user.username}</span>
                   </div>
                 )
               ) : (
@@ -199,6 +228,98 @@ if (typeof window !== 'undefined') {
       background: rgba(61, 41, 20, 0.95) !important;
     }
     
+    /* DASHBOARD - TRANSPARENT BACKGROUND */
+    .mobile-menu-container.dashboard-transparent {
+      background: transparent !important;
+      backdrop-filter: none !important;
+    }
+    
+    /* DASHBOARD - BROWN BACKGROUND IN DARK MODE */
+    .mobile-menu-container.dashboard-force-brown {
+      background: rgba(255, 255, 255, 0.95) !important;
+      backdrop-filter: blur(8px);
+    }
+    
+    :root.dark .mobile-menu-container.dashboard-force-brown {
+      background: #3d2914 !important;
+    }
+    
+    .mobile-menu-container.dashboard-force-brown .mobile-menu-content a {
+      color: white !important;
+    }
+    
+    .mobile-menu-container.dashboard-force-brown .mobile-menu-content button {
+      color: white !important;
+    }
+    
+    /* Dashboard menu styling */
+    .mobile-menu-container.dashboard-brown {
+      background: rgba(255, 255, 255, 0.95) !important;
+      backdrop-filter: blur(8px);
+    }
+    
+    :root.dark .mobile-menu-container.dashboard-brown {
+      background: rgba(61, 41, 20, 0.95) !important;
+    }
+    
+    .mobile-menu-container.dashboard-brown .mobile-menu-content a {
+      color: #a65b2b !important;
+    }
+    
+    :root.dark .mobile-menu-container.dashboard-brown .mobile-menu-content a {
+      color: white !important;
+    }
+    
+    .mobile-menu-container.dashboard-brown .mobile-menu-content button {
+      color: #a65b2b !important;
+    }
+    
+    :root.dark .mobile-menu-container.dashboard-brown .mobile-menu-content button {
+      color: white !important;
+    }
+    
+    /* Dashboard menu styling - FORCE BROWN */
+    .mobile-menu-container.dashboard-menu-force-brown {
+      background: rgba(255, 255, 255, 0.95) !important;
+      backdrop-filter: blur(8px);
+    }
+    
+    :root.dark .mobile-menu-container.dashboard-menu-force-brown {
+      background: #8B4513 !important;
+    }
+    
+    .dark .mobile-menu-container.dashboard-menu-force-brown {
+      background: #8B4513 !important;
+    }
+    
+    html.dark .mobile-menu-container.dashboard-menu-force-brown {
+      background: #8B4513 !important;
+    }
+    
+    [data-theme="dark"] .mobile-menu-container.dashboard-menu-force-brown {
+      background: #8B4513 !important;
+    }
+    
+    :root.dark .mobile-menu-container.dashboard-menu-force-brown .mobile-menu-content a {
+      color: white !important;
+    }
+    
+    :root:not(.dark) .mobile-menu-container.dashboard-menu-force-brown .mobile-menu-content a {
+      color: #a65b2b !important;
+    }
+    
+    .mobile-menu-container.dashboard-menu-force-brown .mobile-menu-content a:hover {
+      color: rgba(166, 91, 43, 0.8) !important;
+    }
+    
+    :root:not(.dark) .mobile-menu-container.dashboard-menu-force-brown .mobile-menu-content button {
+      color: #a65b2b !important;
+    }
+    
+    :root:not(.dark) .mobile-menu-container.dashboard-menu-force-brown .mobile-menu-content button:hover {
+      color: rgba(166, 91, 43, 0.8) !important;
+    }
+    
     :root.dark .mobile-menu-container.landing-menu .mobile-menu-content a {
       color: white !important;
     }
@@ -227,6 +348,15 @@ if (typeof window !== 'undefined') {
     
     :root:not(.dark) .navbar button[aria-label="Toggle menu"] span {
       background-color: white !important;
+    }
+    
+    /* Dashboard hamburger styling */
+    .hamburger-dashboard {
+      background-color: #a65b2b !important;
+    }
+    
+    :root.dark .hamburger-dashboard {
+      background-color: #a65b2b !important;
     }
     
     @media (max-width: 767px) {

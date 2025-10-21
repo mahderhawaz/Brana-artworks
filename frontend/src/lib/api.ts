@@ -186,14 +186,22 @@ class ApiClient {
   }
 
   async forgotPassword(email: string) {
-    return this.request<{ message: string }>(
-      `/auth/forgot-password`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      },
-    );
+    console.log('🔄 Attempting forgot password for:', email);
+    try {
+      const result = await this.request<{ message: string }>(
+        `/auth/forgot-password`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        },
+      );
+      console.log('✅ Forgot password success:', result);
+      return result;
+    } catch (error) {
+      console.error('❌ Forgot password failed:', error);
+      throw error;
+    }
   }
 
   async resetPassword(token: string, password: string) {

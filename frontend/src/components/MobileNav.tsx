@@ -91,15 +91,15 @@ const MobileNav: React.FC<MobileNavProps> = ({ isDashboard = false }) => {
           right: -300px;
           width: 280px;
           height: 100vh;
-          background: #fff;
+          background: ${isDashboard ? 'transparent' : '#fff'};
           z-index: 999;
           transition: right 0.3s ease;
           padding: 20px;
-          box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+          box-shadow: ${isDashboard ? 'none' : '-2px 0 10px rgba(0, 0, 0, 0.1)'};
         }
 
         :root.dark .mobile-menu {
-          background: #3d2914;
+          background: ${isDashboard ? 'transparent' : '#3d2914'};
         }
 
         .mobile-menu.open {

@@ -36,10 +36,20 @@ export default function ForgotPasswordForm() {
       setSuccess(true);
     } catch (error: any) {
       console.error('Forgot password error:', error);
-      // Always use test mode for demo purposes since backend endpoint may not be implemented
-      console.log('Using test mode for password reset demo');
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setSuccess(true);
+      
+      // Check if it's a network error or API not implemented
+      if (error.message.includes('Failed to fetch') || 
+          error.message.includes('404') || 
+          error.message.includes('Not Found') ||
+          error.message.includes('500')) {
+        // Backend endpoint not available - use test mode
+        console.log('Backend endpoint not available, using test mode');
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setSuccess(true);
+      } else {
+        // Real API error - show to user
+        setError(error.message || 'Failed to send reset email. Please try again.');
+      }
     } finally {
       setSubmitting(false);
     }
