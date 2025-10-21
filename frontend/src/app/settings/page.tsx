@@ -135,6 +135,7 @@ export default function SettingsPage() {
                 <DefaultAvatar size={36} />
               )}
             </div>
+            {user && <button onClick={() => { api.logout(); window.location.href = '/'; }} className="logout-btn">Logout</button>}
           </div>
           <div className="flex md:hidden items-center gap-2">
             <div className="avatar">
@@ -570,6 +571,33 @@ export default function SettingsPage() {
         .button.primary{ background:var(--accent); color:#fff !important; box-shadow: 0 6px 18px rgba(166,91,43,0.12); }
 
         /* responsive */
+        .logout-btn {
+          background: transparent;
+          border: 1px solid #a65b2b;
+          color: #a65b2b;
+          padding: 6px 12px;
+          border-radius: 6px;
+          font-size: 12px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+        
+        .logout-btn:hover {
+          background: #a65b2b;
+          color: white;
+        }
+        
+        :root.dark .logout-btn {
+          border-color: #a65b2b;
+          color: white;
+        }
+        
+        :root.dark .logout-btn:hover {
+          background: #a65b2b;
+          color: white;
+        }
+        
         @media (max-width: 768px) {
           .centerlinks { display: none; }
         }

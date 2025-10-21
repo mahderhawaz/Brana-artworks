@@ -3,12 +3,21 @@
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { api, User } from '../../lib/api';
 import ThemeToggle from "../../components/ThemeToggle";
 import "../../styles/globals.css";
 
 export default function AboutPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      api.getProfile().then(setUser).catch(() => {});
+    }
+  }, []);
   
   return (
     <>
@@ -26,14 +35,24 @@ export default function AboutPage() {
           <nav className="nav-links hidden md:flex" style={{ gap: 16, alignItems: "center", fontSize: 15, position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
             <Link href="/" className="nav-link">Home</Link>
             <Link href="/collections" className="nav-link">Our Collections</Link>
+            <Link href="/new-arrivals" className="nav-link">New Arrivals</Link>
             <Link href="/about" className="nav-link active">About Us</Link>
             <Link href="/contact" className="nav-link">Contact</Link>
           </nav>
 
           <div className="hidden md:flex" style={{ gap: "8px", alignItems: "center" }}>
             <ThemeToggle />
-            <Link href="/signup" className="auth-btn">Sign Up</Link>
-            <Link href="/login" className="auth-btn">Log in</Link>
+            {user ? (
+              <>
+                <Link href="/dashboard" className="auth-btn">Dashboard</Link>
+                <button onClick={() => { api.logout(); setUser(null); window.location.href = '/'; }} className="auth-btn logout-btn">Logout</button>
+              </>
+            ) : (
+              <>
+                <Link href="/signup" className="auth-btn">Sign Up</Link>
+                <Link href="/login" className="auth-btn">Log in</Link>
+              </>
+            )}
           </div>
           
           {/* Mobile Menu Button */}
@@ -55,6 +74,7 @@ export default function AboutPage() {
           <div className="px-4 py-6 space-y-4">
             <Link href="/" className="block py-2 text-gray-700 hover:text-amber-600" onClick={() => setMobileMenuOpen(false)}>Home</Link>
             <Link href="/collections" className="block py-2 text-gray-700 hover:text-amber-600" onClick={() => setMobileMenuOpen(false)}>Our Collections</Link>
+            <Link href="/new-arrivals" className="block py-2 text-gray-700 hover:text-amber-600" onClick={() => setMobileMenuOpen(false)}>New Arrivals</Link>
             <Link href="/about" className="block py-2 text-amber-600 font-semibold" onClick={() => setMobileMenuOpen(false)}>About Us</Link>
             <Link href="/contact" className="block py-2 text-gray-700 hover:text-amber-600" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
             
@@ -62,8 +82,17 @@ export default function AboutPage() {
               <div className="flex justify-center mb-3">
                 <ThemeToggle />
               </div>
-              <Link href="/signup" className="block bg-amber-600 text-white text-center py-2 px-4 rounded hover:bg-amber-700" onClick={() => setMobileMenuOpen(false)}>Sign Up</Link>
-              <Link href="/login" className="block border border-amber-600 text-amber-600 text-center py-2 px-4 rounded hover:bg-amber-50" onClick={() => setMobileMenuOpen(false)}>Log In</Link>
+              {user ? (
+                <>
+                  <Link href="/dashboard" className="block bg-amber-600 text-white text-center py-2 px-4 rounded hover:bg-amber-700" onClick={() => setMobileMenuOpen(false)}>Dashboard</Link>
+                  <button onClick={() => { api.logout(); setUser(null); window.location.href = '/'; setMobileMenuOpen(false); }} className="block w-full border border-amber-600 text-amber-600 text-center py-2 px-4 rounded hover:bg-amber-50">Logout</button>
+                </>
+              ) : (
+                <>
+                  <Link href="/signup" className="block bg-amber-600 text-white text-center py-2 px-4 rounded hover:bg-amber-700" onClick={() => setMobileMenuOpen(false)}>Sign Up</Link>
+                  <Link href="/login" className="block border border-amber-600 text-amber-600 text-center py-2 px-4 rounded hover:bg-amber-50" onClick={() => setMobileMenuOpen(false)}>Log In</Link>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -232,7 +261,20 @@ export default function AboutPage() {
           padding: 7px 12px;
           border-radius: 8px;
           text-decoration: none;
+          border: none;
+          cursor: pointer;
           transition: background 0.2s ease;
+        }
+        
+        .logout-btn {
+          background: transparent;
+          border: 1px solid #a65b2b;
+          color: #a65b2b;
+        }
+        
+        .logout-btn:hover {
+          background: #a65b2b;
+          color: white;
         }
         
         header {

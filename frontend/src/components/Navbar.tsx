@@ -15,6 +15,7 @@ const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
   const isLandingPage = pathname === '/';
+  const isDashboardPage = ['/dashboard', '/my-artworks', '/profile', '/purchases', '/sales', '/settings', '/upload-artwork'].includes(pathname);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -43,21 +44,27 @@ const Navbar: React.FC = () => {
           <Image src="/assets/logo.png" alt="BRANA Arts logo" width={60} height={60} priority className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-18 lg:h-18 xl:w-20 xl:h-20 rounded-full object-cover" />
         </div>
 
-        {/* Desktop Navigation - Show on all pages for desktop */}
-        <ul className="nav-links hidden md:flex space-x-4 lg:space-x-6" role="menubar" aria-label="Main navigation">
-          <li><Link href="/" className="text-sm lg:text-base text-white hover:text-gray-300 transition-colors">Home</Link></li>
-          <li><Link href="/collections" className="text-sm lg:text-base text-white hover:text-gray-300 transition-colors">Our Collections</Link></li>
-          <li><Link href="/new-arrivals" className="text-sm lg:text-base text-white hover:text-gray-300 transition-colors">New Arrivals</Link></li>
-          <li><Link href="/about" className="text-sm lg:text-base text-white hover:text-gray-300 transition-colors">About Us</Link></li>
-          <li><Link href="/contact" className="text-sm lg:text-base text-white hover:text-gray-300 transition-colors">Contact</Link></li>
-        </ul>
+        {/* Desktop Navigation */}
+        {!isDashboardPage ? (
+          <ul className="nav-links hidden md:flex space-x-4 lg:space-x-6" role="menubar" aria-label="Main navigation">
+            <li><Link href="/" className="text-sm lg:text-base text-white hover:text-gray-300 transition-colors">Home</Link></li>
+            <li><Link href="/collections" className="text-sm lg:text-base text-white hover:text-gray-300 transition-colors">Our Collections</Link></li>
+            <li><Link href="/new-arrivals" className="text-sm lg:text-base text-white hover:text-gray-300 transition-colors">New Arrivals</Link></li>
+            <li><Link href="/about" className="text-sm lg:text-base text-white hover:text-gray-300 transition-colors">About Us</Link></li>
+            <li><Link href="/contact" className="text-sm lg:text-base text-white hover:text-gray-300 transition-colors">Contact</Link></li>
+          </ul>
+        ) : (
+          <ul className="nav-links hidden md:flex" role="menubar" aria-label="Dashboard navigation">
+            <li><Link href="/" className="text-white hover:text-gray-300 transition-colors flex items-center space-x-1" title="Home">🏠</Link></li>
+          </ul>
+        )}
 
         {/* Desktop Actions - Hidden on mobile, visible on desktop */}
         <div className="nav-actions hidden md:flex items-center space-x-2 lg:space-x-3">
           <ThemeToggle />
           {user ? (
             <>
-              {!isLandingPage && (
+              {!isLandingPage && !isDashboardPage && (
                 <>
                   <button className="text-white text-lg" aria-label="Notifications">🔔</button>
                   {user.profilePicture ? (
@@ -74,10 +81,14 @@ const Navbar: React.FC = () => {
                   <span className="welcome-text text-xs lg:text-sm">Welcome, {user.username}</span>
                 </>
               )}
-              <Link href="/dashboard" className="btn primary text-xs lg:text-sm px-2 lg:px-3 py-1 lg:py-2">Dashboard</Link>
-              <button onClick={handleLogout} className="btn ghost text-xs lg:text-sm px-2 lg:px-3 py-1 lg:py-2">
-                Log Out
-              </button>
+              {!isDashboardPage && (
+                <>
+                  <Link href="/dashboard" className="btn primary text-xs lg:text-sm px-2 lg:px-3 py-1 lg:py-2">Dashboard</Link>
+                  <button onClick={handleLogout} className="btn ghost text-xs lg:text-sm px-2 lg:px-3 py-1 lg:py-2">
+                    Log Out
+                  </button>
+                </>
+              )}
             </>
           ) : (
             <>
@@ -103,15 +114,23 @@ const Navbar: React.FC = () => {
       {isMenuOpen && (
         <div className={`md:hidden absolute top-full left-0 right-0 z-50 mobile-menu-container ${isLandingPage ? 'landing-menu' : 'other-menu'}`}>
           <div className="px-4 py-6 space-y-4 mobile-menu-content">
-            {/* Public Navigation Links */}
-            <Link href="/" className="block text-white hover:text-gray-300 py-2" onClick={() => setIsMenuOpen(false)}>Home</Link>
-            <Link href="/collections" className="block text-white hover:text-gray-300 py-2" onClick={() => setIsMenuOpen(false)}>Explore</Link>
-            {!user && (
+            {/* Navigation Links */}
+            {!isDashboardPage ? (
               <>
-                <Link href="/new-arrivals" className="block text-white hover:text-gray-300 py-2" onClick={() => setIsMenuOpen(false)}>New Arrivals</Link>
-                <Link href="/about" className="block text-white hover:text-gray-300 py-2" onClick={() => setIsMenuOpen(false)}>About Us</Link>
-                <Link href="/contact" className="block text-white hover:text-gray-300 py-2" onClick={() => setIsMenuOpen(false)}>Contact</Link>
+                <Link href="/" className="block text-white hover:text-gray-300 py-2" onClick={() => setIsMenuOpen(false)}>Home</Link>
+                <Link href="/collections" className="block text-white hover:text-gray-300 py-2" onClick={() => setIsMenuOpen(false)}>Explore</Link>
+                {!user && (
+                  <>
+                    <Link href="/new-arrivals" className="block text-white hover:text-gray-300 py-2" onClick={() => setIsMenuOpen(false)}>New Arrivals</Link>
+                    <Link href="/about" className="block text-white hover:text-gray-300 py-2" onClick={() => setIsMenuOpen(false)}>About Us</Link>
+                    <Link href="/contact" className="block text-white hover:text-gray-300 py-2" onClick={() => setIsMenuOpen(false)}>Contact</Link>
+                  </>
+                )}
               </>
+            ) : (
+              <Link href="/" className="block text-white hover:text-gray-300 py-2 flex items-center space-x-2" onClick={() => setIsMenuOpen(false)}>
+                <span>🏠</span><span>Home</span>
+              </Link>
             )}
             
             {/* User-specific items - only show for logged-in users */}

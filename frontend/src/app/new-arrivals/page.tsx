@@ -110,8 +110,17 @@ export default function NewArrivals() {
 
           <div className="hidden md:flex" style={{ gap: "8px", alignItems: "center" }}>
             <ThemeToggle />
-            <Link href="/signup" className="auth-btn">Sign Up</Link>
-            <Link href="/login" className="auth-btn">Log in</Link>
+            {user ? (
+              <>
+                <Link href="/dashboard" className="auth-btn">Dashboard</Link>
+                <button onClick={() => { api.logout(); setUser(null); window.location.href = '/'; }} className="auth-btn logout-btn">Logout</button>
+              </>
+            ) : (
+              <>
+                <Link href="/signup" className="auth-btn">Sign Up</Link>
+                <Link href="/login" className="auth-btn">Log in</Link>
+              </>
+            )}
           </div>
           
           {/* Mobile Menu Button */}
@@ -141,8 +150,17 @@ export default function NewArrivals() {
               <div className="flex justify-center mb-3">
                 <ThemeToggle />
               </div>
-              <Link href="/signup" className="block bg-amber-600 text-white text-center py-2 px-4 rounded hover:bg-amber-700" onClick={() => setMobileMenuOpen(false)}>Sign Up</Link>
-              <Link href="/login" className="block border border-amber-600 text-amber-600 text-center py-2 px-4 rounded hover:bg-amber-50" onClick={() => setMobileMenuOpen(false)}>Log In</Link>
+              {user ? (
+                <>
+                  <Link href="/dashboard" className="block bg-amber-600 text-white text-center py-2 px-4 rounded hover:bg-amber-700" onClick={() => setMobileMenuOpen(false)}>Dashboard</Link>
+                  <button onClick={() => { api.logout(); setUser(null); window.location.href = '/'; setMobileMenuOpen(false); }} className="block w-full border border-amber-600 text-amber-600 text-center py-2 px-4 rounded hover:bg-amber-50">Logout</button>
+                </>
+              ) : (
+                <>
+                  <Link href="/signup" className="block bg-amber-600 text-white text-center py-2 px-4 rounded hover:bg-amber-700" onClick={() => setMobileMenuOpen(false)}>Sign Up</Link>
+                  <Link href="/login" className="block border border-amber-600 text-amber-600 text-center py-2 px-4 rounded hover:bg-amber-50" onClick={() => setMobileMenuOpen(false)}>Log In</Link>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -292,13 +310,17 @@ export default function NewArrivals() {
         .media {
           position: relative;
           width: 100%;
-          padding-top: 70%;
+          height: 200px;
           background: #f3f1ef;
+          overflow: hidden;
         }
         .media img {
           position: absolute;
           top: 0;
           left: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
           border-top-left-radius: 10px;
           border-top-right-radius: 10px;
         }
@@ -472,7 +494,20 @@ export default function NewArrivals() {
           padding: 7px 12px;
           border-radius: 8px;
           text-decoration: none;
+          border: none;
+          cursor: pointer;
           transition: background 0.2s ease;
+        }
+        
+        .logout-btn {
+          background: transparent;
+          border: 1px solid #a65b2b;
+          color: #a65b2b;
+        }
+        
+        .logout-btn:hover {
+          background: #a65b2b;
+          color: white;
         }
         
         header {
