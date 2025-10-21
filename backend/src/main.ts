@@ -10,7 +10,17 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bodyParser: true,
   });
-  app.enableCors();
+  app.enableCors({
+    origin: [
+      'http://localhost:3000',
+      'https://brana-artworks.vercel.app',
+      /\.vercel\.app$/,
+      /\.netlify\.app$/
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  });
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }));
   
   // Increase payload size limit for image uploads
