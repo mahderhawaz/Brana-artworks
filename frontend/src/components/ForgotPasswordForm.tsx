@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { api } from '../lib/api';
 import styles from "./ForgotPassword.module.css";
 
 export default function ForgotPasswordForm() {
@@ -31,19 +32,10 @@ export default function ForgotPasswordForm() {
 
     setSubmitting(true);
     try {
-      const response = await fetch('http://localhost:3001/auth/forgot-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-      });
-      
-      if (response.ok) {
-        setSuccess(true);
-      } else {
-        setError('Failed to send reset email');
-      }
+      await api.forgotPassword(email);
+      setSuccess(true);
     } catch (error: any) {
-      setError("Failed to send reset email. Please try again.");
+      setError(error.message || "Failed to send reset email. Please try again.");
     } finally {
       setSubmitting(false);
     }

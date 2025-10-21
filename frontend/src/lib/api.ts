@@ -185,6 +185,28 @@ class ApiClient {
     }
   }
 
+  async forgotPassword(email: string) {
+    return this.request<{ message: string }>(
+      `/auth/forgot-password`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      },
+    );
+  }
+
+  async resetPassword(token: string, password: string) {
+    return this.request<{ message: string }>(
+      `/auth/reset-password`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, password }),
+      },
+    );
+  }
+
   logout() {
     localStorage.removeItem('token');
   }

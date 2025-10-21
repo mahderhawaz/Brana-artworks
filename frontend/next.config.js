@@ -10,6 +10,11 @@ const nextConfig = {
     // your project has type errors.
     ignoreBuildErrors: true,
   },
+  allowedDevOrigins: [
+    '10.4.115.64',
+    'localhost',
+    '127.0.0.1'
+  ],
 }
 
 module.exports = nextConfig
