@@ -103,16 +103,15 @@ const Navbar: React.FC = () => {
       {isMenuOpen && (
         <div className={`md:hidden absolute top-full left-0 right-0 z-50 mobile-menu-container ${isLandingPage ? 'landing-menu' : 'other-menu'}`}>
           <div className="px-4 py-6 space-y-4 mobile-menu-content">
-            {/* Navigation Links */}
+            {/* Public Navigation Links */}
             <Link href="/" className="block text-white hover:text-gray-300 py-2" onClick={() => setIsMenuOpen(false)}>Home</Link>
             <Link href="/collections" className="block text-white hover:text-gray-300 py-2" onClick={() => setIsMenuOpen(false)}>Explore</Link>
-            <Link href="/dashboard" className="block text-white hover:text-gray-300 py-2" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
-            <Link href="/my-artworks" className="block text-white hover:text-gray-300 py-2" onClick={() => setIsMenuOpen(false)}>My Artworks</Link>
             
-            {/* User-specific items for logged-in users */}
+            {/* User-specific items - only show for logged-in users */}
             {user && (
               <>
                 <Link href="/dashboard" className="block text-white hover:text-gray-300 py-2" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
+                <Link href="/my-artworks" className="block text-white hover:text-gray-300 py-2" onClick={() => setIsMenuOpen(false)}>My Artworks</Link>
                 <button onClick={() => {handleLogout(); setIsMenuOpen(false);}} className="block w-full text-left text-white hover:text-gray-300 py-2">
                   Logout
                 </button>
