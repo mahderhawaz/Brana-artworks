@@ -10,6 +10,9 @@ const nextConfig = {
     // your project has type errors.
     ignoreBuildErrors: true,
   },
+  images: {
+    qualities: [75, 90, 100],
+  },
   allowedDevOrigins: [
     '10.4.115.64',
     'localhost',

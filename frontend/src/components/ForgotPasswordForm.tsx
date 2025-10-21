@@ -10,6 +10,7 @@ export default function ForgotPasswordForm() {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [isTestMode, setIsTestMode] = useState(false);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setEmail(e.target.value);
@@ -37,17 +38,17 @@ export default function ForgotPasswordForm() {
     } catch (error: any) {
       console.error('Forgot password error:', error);
       
-      // Check if it's a network error or API not implemented
+      // Only use test mode for network/server connection issues
       if (error.message.includes('Failed to fetch') || 
-          error.message.includes('404') || 
-          error.message.includes('Not Found') ||
-          error.message.includes('500')) {
-        // Backend endpoint not available - use test mode
-        console.log('Backend endpoint not available, using test mode');
+          error.message.includes('NetworkError') ||
+          error.message.includes('ERR_NETWORK')) {
+        // Backend server not running - use test mode
+        console.log('Backend server not running, using test mode for demo');
         await new Promise(resolve => setTimeout(resolve, 1000));
+        setIsTestMode(true);
         setSuccess(true);
       } else {
-        // Real API error - show to user
+        // Real API error (like email not found) - show to user
         setError(error.message || 'Failed to send reset email. Please try again.');
       }
     } finally {
@@ -64,6 +65,11 @@ export default function ForgotPasswordForm() {
             <p className={styles.subtitle}>
               We've sent a password reset link to {email}
             </p>
+            {isTestMode && (
+              <p style={{ fontSize: '14px', color: '#6b625d', marginTop: '10px' }}>
+                Note: This is a demo mode. In production, you would receive an actual email.
+              </p>
+            )}
           </div>
           <div className={styles.footerText}>
             <Link href="/reset-password" className={styles.backLink}>
