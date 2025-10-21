@@ -139,22 +139,39 @@ export default function ProfileSettingsPage() {
         </nav>
 
         <div className="right">
-          <ThemeToggle />
-          <button className="iconBtn" aria-label="Notifications">🔔</button>
-          <div className="avatarWrap">
-            {user?.profilePicture ? (
-              <Image 
-                src={user.profilePicture} 
-                alt="User avatar" 
-                width={36} 
-                height={36} 
-                style={{ borderRadius: '50%', objectFit: 'cover' }}
-              />
-            ) : (
-              <DefaultAvatar size={36} />
-            )}
+          <div className="hidden md:flex items-center gap-3">
+            <ThemeToggle />
+            <button className="iconBtn" aria-label="Notifications">🔔</button>
+            <div className="avatarWrap">
+              {user?.profilePicture ? (
+                <Image 
+                  src={user.profilePicture} 
+                  alt="User avatar" 
+                  width={36} 
+                  height={36} 
+                  style={{ borderRadius: '50%', objectFit: 'cover' }}
+                />
+              ) : (
+                <DefaultAvatar size={36} />
+              )}
+            </div>
           </div>
-          <MobileNav isDashboard={true} />
+          <div className="flex md:hidden items-center gap-2">
+            <div className="avatarWrap">
+              {user?.profilePicture ? (
+                <Image 
+                  src={user.profilePicture} 
+                  alt="User avatar" 
+                  width={32} 
+                  height={32} 
+                  style={{ borderRadius: '50%', objectFit: 'cover' }}
+                />
+              ) : (
+                <DefaultAvatar size={32} />
+              )}
+            </div>
+            <MobileNav isDashboard={true} />
+          </div>
         </div>
       </header>
 
