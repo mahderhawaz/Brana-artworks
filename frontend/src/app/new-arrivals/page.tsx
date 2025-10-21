@@ -293,18 +293,18 @@ export default function NewArrivals() {
 
         .card {
           background: #ffffff;
-          border-radius: 10px;
+          border-radius: 12px;
           overflow: hidden;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
           display: flex;
           flex-direction: column;
-          transition: transform 220ms ease, box-shadow 220ms ease;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
           cursor: pointer;
           will-change: transform;
         }
         .card:hover {
-          transform: translateY(-8px);
-          box-shadow: 0 20px 45px rgba(0,0,0,0.18);
+          transform: translateY(-5px);
+          box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
 
         .media {
@@ -321,8 +321,8 @@ export default function NewArrivals() {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          border-top-left-radius: 10px;
-          border-top-right-radius: 10px;
+          border-top-left-radius: 12px;
+          border-top-right-radius: 12px;
         }
 
         .priceTag {
