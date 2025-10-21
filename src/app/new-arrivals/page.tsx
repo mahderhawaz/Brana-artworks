@@ -6,8 +6,6 @@ import Link from "next/link";
 import { useState, useEffect } from 'react';
 import { Artwork, api, User } from '../../lib/api';
 import ArtworkModal from '../../components/ArtworkModal';
-import PaymentModal from '../../components/PaymentModal';
-import SuccessMessage from '../../components/SuccessMessage';
 import ThemeToggle from "../../components/ThemeToggle";
 import "../../styles/globals.css";
 
@@ -15,8 +13,6 @@ export default function NewArrivals() {
   const [artworks, setArtworks] = useState<Artwork[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
-  const [paymentArtwork, setPaymentArtwork] = useState<Artwork | null>(null);
-  const [successArtwork, setSuccessArtwork] = useState<Artwork | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -30,7 +26,6 @@ export default function NewArrivals() {
         }
         
         const allArtworks = await api.getArtworks();
-        console.log('Fetched artworks:', allArtworks); // Debug log
         const sortedArtworks = allArtworks.sort((a, b) => 
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
@@ -57,17 +52,10 @@ export default function NewArrivals() {
     }
   };
 
-  const handleBuyClick = (artwork: Artwork) => {
+  const handleBuyArtwork = async (artworkId: string) => {
     if (!user) return;
-    setPaymentArtwork(artwork);
-  };
-
-  const handlePaymentSuccess = async () => {
-    if (!paymentArtwork) return;
     try {
-      await api.buyArtwork(paymentArtwork._id);
-      setPaymentArtwork(null);
-      setSuccessArtwork(paymentArtwork);
+      await api.buyArtwork(artworkId);
       handleArtworkUpdate();
     } catch (error) {
       console.error('Failed to buy artwork:', error);
@@ -208,28 +196,17 @@ export default function NewArrivals() {
                         alt={artwork.title}
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       />
-                      {artwork.price && artwork.price > 0 && !artwork.sold && (
+                      {artwork.forSale && !artwork.sold && (
                         <div className="priceTag">${artwork.price}</div>
                       )}
                       {artwork.sold && (
                         <div className="soldTag">SOLD</div>
                       )}
-                      {!artwork.sold && user && !isOwner(artwork) && (
-                        <button 
-                          className="buyOverlayBtn"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleBuyClick(artwork);
-                          }}
-                        >
-                          Buy Here
-                        </button>
-                      )}
                     </div>
                     
                     <div className="content">
                       <h3 className="cardTitle">{artwork.title}</h3>
-                      <p className="artist">by {artwork.artist?.username || 'Unknown Artist'}</p>
+                      <p className="artist">by {artwork.artist.username}</p>
                       <div className="cardStats">
                         <span className="stat">
                           {user && artwork.likedBy?.includes(user._id || user.id || '') ? '❤️' : '🤍'} {artwork.likes}
@@ -237,28 +214,22 @@ export default function NewArrivals() {
                         <span className="stat">💬 {artwork.comments.length}</span>
                         <span className="date">{new Date(artwork.createdAt).toLocaleDateString()}</span>
                       </div>
-                      <div className="priceInfo">
-                        {artwork.sold ? (
-                          <span className="soldText">SOLD</span>
-                        ) : artwork.price && artwork.price > 0 ? (
-                          <>
-                            <span className="price">${artwork.price}</span>
-                            {!isOwner(artwork) && user && (
-                              <button 
-                                className="buyBtn"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleBuyClick(artwork);
-                                }}
-                              >
-                                Buy Here
-                              </button>
-                            )}
-                          </>
-                        ) : (
-                          <span className="notForSale">Not for sale</span>
-                        )}
-                      </div>
+                      {artwork.forSale && !artwork.sold && (
+                        <div className="priceInfo">
+                          <span className="price">${artwork.price}</span>
+                          {!isOwner(artwork) && user && (
+                            <button 
+                              className="buyBtn"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleBuyArtwork(artwork._id);
+                              }}
+                            >
+                              Buy Now
+                            </button>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </article>
                 ))}
@@ -274,28 +245,6 @@ export default function NewArrivals() {
           user={user}
           onClose={() => setSelectedArtwork(null)}
           onUpdate={handleArtworkUpdate}
-        />
-      )}
-
-      {paymentArtwork && (
-        <PaymentModal
-          artwork={{
-            title: paymentArtwork.title,
-            price: paymentArtwork.price || 0,
-            artist: { username: paymentArtwork.artist.username }
-          }}
-          onClose={() => setPaymentArtwork(null)}
-          onSuccess={handlePaymentSuccess}
-        />
-      )}
-
-      {successArtwork && (
-        <SuccessMessage
-          artwork={{
-            title: successArtwork.title,
-            artist: { username: successArtwork.artist.username }
-          }}
-          onClose={() => setSuccessArtwork(null)}
         />
       )}
 
@@ -448,17 +397,6 @@ export default function NewArrivals() {
           color: #a65b2b;
           font-size: 16px;
         }
-        .soldText {
-          font-weight: 700;
-          color: #ef4444;
-          font-size: 14px;
-          text-transform: uppercase;
-        }
-        .notForSale {
-          font-weight: 600;
-          color: #6b625d;
-          font-size: 14px;
-        }
         .buyBtn {
           background: #a65b2b;
           color: white;
@@ -473,31 +411,6 @@ export default function NewArrivals() {
         .buyBtn:hover {
           background: #8f4a20;
           transform: translateY(-1px);
-        }
-        
-        .buyOverlayBtn {
-          position: absolute;
-          bottom: 12px;
-          left: 50%;
-          transform: translateX(-50%);
-          background: rgba(166, 91, 43, 0.9);
-          color: white;
-          border: none;
-          padding: 8px 16px;
-          border-radius: 20px;
-          font-size: 12px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          backdrop-filter: blur(4px);
-          opacity: 1;
-          visibility: visible;
-          z-index: 10;
-        }
-        
-        .buyOverlayBtn:hover {
-          background: rgba(143, 74, 32, 0.95);
-          transform: translateX(-50%) translateY(-2px);
         }
 
         .emptyState {
@@ -630,27 +543,6 @@ export default function NewArrivals() {
         
         :root.dark .card {
           background: #4a3319 !important;
-        }
-        
-        :root.dark .soldText {
-          color: #f87171 !important;
-        }
-        
-        :root.dark .notForSale {
-          color: white !important;
-        }
-        
-        :root.dark .priceInfo .price {
-          color: #a65b2b !important;
-        }
-        
-        :root.dark .buyOverlayBtn {
-          background: rgba(166, 91, 43, 0.9);
-          color: white;
-        }
-        
-        :root.dark .buyOverlayBtn:hover {
-          background: rgba(143, 74, 32, 0.95);
         }
         
         /* Mobile Menu Dark Theme */

@@ -133,8 +133,7 @@ export default function UploadArtworkPage() {
       }
       
       const { api } = await import('../../lib/api');
-      const priceValue = price ? parseFloat(price) : undefined;
-      await api.createArtwork(title, description, imageUrl, priceValue);
+      await api.createArtwork(title, description, imageUrl);
 
       // Trigger refresh of my-artworks page
       window.dispatchEvent(new Event('artworkUploaded'));

@@ -126,18 +126,13 @@ class ApiClient {
     return this.request<Artwork[]>(`/artworks`, { method: 'GET' });
   }
 
-  async createArtwork(title: string, description: string, imageUrl: string, price?: number): Promise<Artwork> {
-    const payload: any = { title, description, imageUrl };
-    if (price && price > 0) {
-      payload.price = price;
-      payload.forSale = true;
-    }
+  async createArtwork(title: string, description: string, imageUrl: string): Promise<Artwork> {
     return this.request<Artwork>(
       `/artworks`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ title, description, imageUrl }),
       },
       true,
     );

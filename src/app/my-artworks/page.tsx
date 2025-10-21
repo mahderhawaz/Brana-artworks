@@ -10,8 +10,6 @@ import MobileNav from "../../components/MobileNav"
 import DefaultAvatar from "../../components/DefaultAvatar"
 import PageTransition from "../../components/PageTransition"
 import { api, Artwork, User } from "../../lib/api"
-import PaymentModal from "../../components/PaymentModal"
-import SuccessMessage from "../../components/SuccessMessage"
 
 /**
  * Enhanced "My Artworks" page
@@ -23,36 +21,55 @@ import SuccessMessage from "../../components/SuccessMessage"
 
 const demoArtworkRows = [
   [
-    { _id: "demo1", title: "Ethiopian Coffee Ceremony", price: "$250", status: "Available", src: "/cards/paint.jpg", artist: { username: "Demo Artist" } },
-    { _id: "demo2", title: "Traditional Wedding", price: "$300", status: "Sold", src: "/cards/pottery 1.jpg", artist: { username: "Demo Artist" } },
-    { _id: "demo3", title: "Mask Dance", price: "$180", status: "Available", src: "/cards/basket.jpg", artist: { username: "Demo Artist" } },
-    { _id: "demo4", title: "Ethiopian Weaving", price: "$220", status: "Available", src: "/cards/tibeb 2.jpg", artist: { username: "Demo Artist" } },
-    { _id: "demo5", title: "Pottery Art", price: "$150", status: "Sold", src: "/assets/pot1.jpg", artist: { username: "Demo Artist" } },
-    { _id: "demo6", title: "Basketry Craft", price: "$200", status: "Available", src: "/assets/basketery1.jpg", artist: { username: "Demo Artist" } },
-    { _id: "demo7", title: "Traditional Paint", price: "$320", status: "Available", src: "/assets/paint1.jpg", artist: { username: "Demo Artist" } },
-    { _id: "demo8", title: "Ceramic Bowl", price: "$180", status: "Available", src: "/assets/pot2.jpg", artist: { username: "Demo Artist" } }
+    { title: "Ethiopian Coffee Ceremony", price: "$250", status: "Available", src: "/cards/paint.jpg" },
+    { title: "Traditional Wedding", price: "$300", status: "Sold", src: "/cards/pottery 1.jpg" },
+    { title: "Mask Dance", price: "$180", status: "Available", src: "/cards/basket.jpg" },
+    { title: "Ethiopian Weaving", price: "$220", status: "Available", src: "/cards/tibeb 2.jpg" },
+    { title: "Pottery Art", price: "$150", status: "Sold", src: "/assets/pot1.jpg" },
+    { title: "Basketry Craft", price: "$200", status: "Available", src: "/assets/basketery1.jpg" },
+    { title: "Traditional Paint", price: "$320", status: "Available", src: "/assets/paint1.jpg" },
+    { title: "Ceramic Bowl", price: "$180", status: "Available", src: "/assets/pot2.jpg" }
   ],
   [
-    { _id: "demo9", title: "Tibeb Textile", price: "$280", status: "Available", src: "/assets/tibeb1.jpg", artist: { username: "Demo Artist" } },
-    { _id: "demo10", title: "Woven Basket", price: "$160", status: "Sold", src: "/assets/basketery3.jpg", artist: { username: "Demo Artist" } },
-    { _id: "demo11", title: "Ancient Art", price: "$450", status: "Available", src: "/assets/paint2.jpg", artist: { username: "Demo Artist" } },
-    { _id: "demo12", title: "Clay Pottery", price: "$190", status: "Available", src: "/assets/pot3.jpg", artist: { username: "Demo Artist" } },
-    { _id: "demo13", title: "Traditional Cloth", price: "$240", status: "Available", src: "/assets/tibeb2.jpg", artist: { username: "Demo Artist" } },
-    { _id: "demo14", title: "Handcraft Basket", price: "$210", status: "Sold", src: "/assets/basketery4.jpg", artist: { username: "Demo Artist" } },
-    { _id: "demo15", title: "Royal Painting", price: "$380", status: "Available", src: "/assets/paint3.jpg", artist: { username: "Demo Artist" } },
-    { _id: "demo16", title: "Ceramic Art", price: "$170", status: "Available", src: "/assets/pot4.jpg", artist: { username: "Demo Artist" } }
+    { title: "Tibeb Textile", price: "$280", status: "Available", src: "/assets/tibeb1.jpg" },
+    { title: "Woven Basket", price: "$160", status: "Sold", src: "/assets/basketery3.jpg" },
+    { title: "Ancient Art", price: "$450", status: "Available", src: "/assets/paint2.jpg" },
+    { title: "Clay Pottery", price: "$190", status: "Available", src: "/assets/pot3.jpg" },
+    { title: "Traditional Cloth", price: "$240", status: "Available", src: "/assets/tibeb2.jpg" },
+    { title: "Handcraft Basket", price: "$210", status: "Sold", src: "/assets/basketery4.jpg" },
+    { title: "Royal Painting", price: "$380", status: "Available", src: "/assets/paint3.jpg" },
+    { title: "Ceramic Art", price: "$170", status: "Available", src: "/assets/pot4.jpg" }
   ]
 ]
 
-
+const artworkRows = [
+  [
+    { title: "Ethiopian Coffee Ceremony", price: "$250", status: "Available", src: "/cards/paint.jpg" },
+    { title: "Traditional Wedding", price: "$300", status: "Sold", src: "/cards/pottery 1.jpg" },
+    { title: "Mask Dance", price: "$180", status: "Available", src: "/cards/basket.jpg" },
+    { title: "Ethiopian Weaving", price: "$220", status: "Available", src: "/cards/tibeb 2.jpg" },
+    { title: "Pottery Art", price: "$150", status: "Sold", src: "/assets/pot1.jpg" },
+    { title: "Basketry Craft", price: "$200", status: "Available", src: "/assets/basketery1.jpg" },
+    { title: "Traditional Paint", price: "$320", status: "Available", src: "/assets/paint1.jpg" },
+    { title: "Ceramic Bowl", price: "$180", status: "Available", src: "/assets/pot2.jpg" }
+  ],
+  [
+    { title: "Tibeb Textile", price: "$280", status: "Available", src: "/assets/tibeb1.jpg" },
+    { title: "Woven Basket", price: "$160", status: "Sold", src: "/assets/basketery3.jpg" },
+    { title: "Ancient Art", price: "$450", status: "Available", src: "/assets/paint2.jpg" },
+    { title: "Clay Pottery", price: "$190", status: "Available", src: "/assets/pot3.jpg" },
+    { title: "Traditional Cloth", price: "$240", status: "Available", src: "/assets/tibeb2.jpg" },
+    { title: "Handcraft Basket", price: "$210", status: "Sold", src: "/assets/basketery4.jpg" },
+    { title: "Royal Painting", price: "$380", status: "Available", src: "/assets/paint3.jpg" },
+    { title: "Ceramic Art", price: "$170", status: "Available", src: "/assets/pot4.jpg" }
+  ]
+]
 
 export default function MyArtworksPage() {
   const [page, setPage] = useState(1)
   const [artworks, setArtworks] = useState<Artwork[]>([])
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<User | null>(null)
-  const [paymentArtwork, setPaymentArtwork] = useState<any>(null)
-  const [successArtwork, setSuccessArtwork] = useState<any>(null)
   const totalPages = 10
 
   const handleScroll = (rowIndex: number) => {
@@ -103,33 +120,12 @@ export default function MyArtworksPage() {
 
   function convertToDisplayFormat(artworks: Artwork[]) {
     return artworks.map(artwork => ({
-      _id: artwork._id,
       title: artwork.title,
       price: artwork.price ? `$${artwork.price}` : 'Not for sale',
       status: artwork.sold ? 'Sold' : artwork.forSale ? 'Available' : 'Not for sale',
-      src: artwork.imageUrl,
-      artist: artwork.artist,
-      forSale: artwork.forSale,
-      sold: artwork.sold
+      src: artwork.imageUrl
     }))
   }
-
-  const handleBuyClick = (artwork: any) => {
-    if (!user) return;
-    setPaymentArtwork(artwork);
-  };
-
-  const handlePaymentSuccess = async () => {
-    if (!paymentArtwork) return;
-    try {
-      await api.buyArtwork(paymentArtwork._id);
-      setPaymentArtwork(null);
-      setSuccessArtwork(paymentArtwork);
-      loadUserArtworks();
-    } catch (error) {
-      console.error('Failed to buy artwork:', error);
-    }
-  };
 
   const displayArtworks = convertToDisplayFormat(artworks)
   const artworkRows = displayArtworks.length > 0 
@@ -239,21 +235,9 @@ export default function MyArtworksPage() {
                             <div className="overlay">
                               <div className="meta">
                                 <div className="title">{a.title}</div>
-                                <div className="artist">by {a.artist?.username || user?.username || 'You'}</div>
                                 <div className="bottomRow">
                                   <div className={`price ${a.status === "Sold" ? "sold" : "available"}`}>{a.price}</div>
-                                  {a.status === "Available" && (
-                                    <button className="buyBtn" onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleBuyClick(a);
-                                    }}>Buy Here</button>
-                                  )}
-                                  {a.status === "Sold" && (
-                                    <div className={`status statusSold`}>SOLD</div>
-                                  )}
-                                  {a.status === "Not for sale" && (
-                                    <div className={`status statusNotForSale`}>Not for sale</div>
-                                  )}
+                                  <div className={`status ${a.status === "Sold" ? "statusSold" : "statusAvail"}`}>{a.status}</div>
                                 </div>
                               </div>
                             </div>
@@ -284,21 +268,9 @@ export default function MyArtworksPage() {
                         <div className="overlay">
                           <div className="meta">
                             <div className="title">{a.title}</div>
-                            <div className="artist">by {a.artist?.username || user?.username || 'You'}</div>
                             <div className="bottomRow">
                               <div className={`price ${a.status === "Sold" ? "sold" : "available"}`}>{a.price}</div>
-                              {a.status === "Available" && (
-                                <button className="buyBtn" onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleBuyClick(a);
-                                }}>Buy Here</button>
-                              )}
-                              {a.status === "Sold" && (
-                                <div className={`status statusSold`}>SOLD</div>
-                              )}
-                              {a.status === "Not for sale" && (
-                                <div className={`status statusNotForSale`}>Not for sale</div>
-                              )}
+                              <div className={`status ${a.status === "Sold" ? "statusSold" : "statusAvail"}`}>{a.status}</div>
                             </div>
                           </div>
                         </div>
@@ -317,28 +289,6 @@ export default function MyArtworksPage() {
           </div>
         </div>
       </PageTransition>
-
-      {paymentArtwork && (
-        <PaymentModal
-          artwork={{
-            title: paymentArtwork.title,
-            price: parseInt(paymentArtwork.price?.replace('$', '') || '0'),
-            artist: { username: paymentArtwork.artist?.username || user?.username || 'Unknown' }
-          }}
-          onClose={() => setPaymentArtwork(null)}
-          onSuccess={handlePaymentSuccess}
-        />
-      )}
-
-      {successArtwork && (
-        <SuccessMessage
-          artwork={{
-            title: successArtwork.title,
-            artist: { username: successArtwork.artist?.username || user?.username || 'Unknown' }
-          }}
-          onClose={() => setSuccessArtwork(null)}
-        />
-      )}
 
       <style jsx global>{`
         body {
@@ -662,19 +612,11 @@ export default function MyArtworksPage() {
           text-shadow: 0 2px 8px rgba(0,0,0,0.4);
           line-height: 1.3;
         }
-        .artist{
-          font-size: 12px;
-          color: #f0f0f0;
-          margin-top: 2px;
-          text-shadow: 0 1px 4px rgba(0,0,0,0.6);
-        }
         .bottomRow{
           display:flex;
-          gap:8px;
+          gap:10px;
           align-items:center;
-          justify-content: space-between;
           margin-top:8px;
-          flex-wrap: wrap;
         }
         .price{ font-weight:700; color: #fff; font-size: 14px; }
         .price.sold{ color: #f5c9b8; }
@@ -688,24 +630,6 @@ export default function MyArtworksPage() {
         }
         .statusAvail{ background: rgba(76, 175, 80, 0.2); color: #a8e6a1; }
         .statusSold{ background: rgba(255,255,255,0.15); color: #f5c9b8; }
-        .statusNotForSale{ background: rgba(255,255,255,0.1); color: #d0d0d0; }
-        .buyBtn{
-          background: rgba(166, 91, 43, 0.9);
-          color: white;
-          border: none;
-          padding: 4px 8px;
-          border-radius: 4px;
-          font-size: 10px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-        }
-        .buyBtn:hover{
-          background: rgba(166, 91, 43, 1);
-          transform: translateY(-1px);
-        }
 
         /* pagination */
         .pagination{
@@ -782,19 +706,6 @@ export default function MyArtworksPage() {
         :root.dark .spinner {
           border-color: #4a3319;
           border-top-color: #a65b2b;
-        }
-        
-        :root.dark .artist {
-          color: #f0f0f0 !important;
-        }
-        
-        :root.dark .buyBtn {
-          background: rgba(166, 91, 43, 0.9) !important;
-          color: white !important;
-        }
-        
-        :root.dark .buyBtn:hover {
-          background: rgba(166, 91, 43, 1) !important;
         }
         
         .logout-btn {
