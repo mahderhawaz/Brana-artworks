@@ -71,6 +71,18 @@ export default function MyArtworksPage() {
   const [user, setUser] = useState<User | null>(null)
   const totalPages = 10
 
+  const handleScroll = (rowIndex: number) => {
+    const isMobile = window.innerWidth <= 768
+    if (isMobile) {
+      window.scrollBy({ top: 300, behavior: 'smooth' })
+    } else {
+      const container = document.querySelector(`.artworkGrid-${rowIndex}`)
+      if (container) {
+        container.scrollBy({ left: 300, behavior: 'smooth' })
+      }
+    }
+  }
+
   useEffect(() => {
     loadUserArtworks()
     loadUserProfile()
@@ -147,24 +159,41 @@ export default function MyArtworksPage() {
           </nav>
 
           <div className="right">
-            <ThemeToggle />
-            <button className="iconBtn" aria-label="Notifications">
-              🔔
-            </button>
-            <div className="avatar">
-              {user?.profilePicture ? (
-                <Image 
-                  src={user.profilePicture} 
-                  alt="User" 
-                  width={36} 
-                  height={36} 
-                  style={{ borderRadius: '50%', objectFit: 'cover' }}
-                />
-              ) : (
-                <DefaultAvatar size={36} />
-              )}
+            <div className="hidden md:flex items-center gap-3">
+              <ThemeToggle />
+              <button className="iconBtn" aria-label="Notifications">
+                🔔
+              </button>
+              <div className="avatar">
+                {user?.profilePicture ? (
+                  <Image 
+                    src={user.profilePicture} 
+                    alt="User" 
+                    width={36} 
+                    height={36} 
+                    style={{ borderRadius: '50%', objectFit: 'cover' }}
+                  />
+                ) : (
+                  <DefaultAvatar size={36} />
+                )}
+              </div>
             </div>
-            <MobileNav isDashboard={true} />
+            <div className="flex md:hidden items-center gap-2">
+              <div className="avatar">
+                {user?.profilePicture ? (
+                  <Image 
+                    src={user.profilePicture} 
+                    alt="User" 
+                    width={32} 
+                    height={32} 
+                    style={{ borderRadius: '50%', objectFit: 'cover' }}
+                  />
+                ) : (
+                  <DefaultAvatar size={32} />
+                )}
+              </div>
+              <MobileNav isDashboard={true} />
+            </div>
           </div>
         </header>
 
@@ -185,11 +214,46 @@ export default function MyArtworksPage() {
               <p>Loading your artworks...</p>
             </div>
           ) : (
-            artworkRows.map((row, rowIndex) => (
-            <section key={rowIndex} className="artworkRow" aria-label={`Artwork row ${rowIndex + 1}`}>
+            <>
+            <div className="desktop-rows">
+              {artworkRows.map((row, rowIndex) => (
+                <section key={rowIndex} className="artworkRow" aria-label={`Artwork row ${rowIndex + 1}`}>
+                  <div className="scrollContainer">
+                    <div className={`artworkGrid artworkGrid-${rowIndex}`}>
+                      {row.map((a) => (
+                        <div className="cardContainer" key={a.title}>
+                          <article className="card">
+                            <div className="media">
+                              {a.src && a.src.startsWith('data:') ? (
+                                <img src={a.src} alt={a.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                              ) : (
+                                <Image src={a.src || "/placeholder.svg"} alt={a.title} fill style={{ objectFit: "cover" }} />
+                              )}
+                            </div>
+                            <div className="overlay">
+                              <div className="meta">
+                                <div className="title">{a.title}</div>
+                                <div className="bottomRow">
+                                  <div className={`price ${a.status === "Sold" ? "sold" : "available"}`}>{a.price}</div>
+                                  <div className={`status ${a.status === "Sold" ? "statusSold" : "statusAvail"}`}>{a.status}</div>
+                                </div>
+                              </div>
+                            </div>
+                          </article>
+                        </div>
+                      ))}
+                    </div>
+                    <button className="viewBtn" onClick={() => handleScroll(rowIndex)}>›</button>
+                  </div>
+                </section>
+              ))}
+            </div>
+            
+            {/* Mobile: Single grid */}
+            <div className="mobile-grid">
               <div className="scrollContainer">
                 <div className="artworkGrid">
-                  {row.map((a) => (
+                  {artworkRows.flat().map((a) => (
                     <div className="cardContainer" key={a.title}>
                       <article className="card">
                         <div className="media">
@@ -209,14 +273,13 @@ export default function MyArtworksPage() {
                           </div>
                         </div>
                       </article>
-                      <button className="viewBtn">›</button>
                     </div>
                   ))}
                 </div>
-
+                <button className="viewBtn" onClick={() => handleScroll(0)}>›</button>
               </div>
-            </section>
-          ))
+            </div>
+            </>
           )}
 
 
@@ -227,7 +290,7 @@ export default function MyArtworksPage() {
 
       <style jsx global>{`
         body {
-          background: #fff;
+          background: #fbfaf8 !important;
           color: #a65b2b;
           transition: background-color 0.3s ease, color 0.3s ease;
         }
@@ -235,6 +298,14 @@ export default function MyArtworksPage() {
         :root.dark body {
           background: #3d2914 !important;
           color: white !important;
+        }
+        
+        .main {
+          background: #fbfaf8 !important;
+        }
+        
+        .contentArea {
+          background: #fbfaf8 !important;
         }
         
         .topnav {
@@ -341,7 +412,7 @@ export default function MyArtworksPage() {
         body { margin: 0; font-family: "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial; background: var(--page-bg); color: #a65b2b !important; }
         * { color: #a65b2b !important; }
         .page { display: flex; min-height: 100vh; }
-        .contentArea { flex: 1; display: flex; flex-direction: column; }
+        .contentArea { flex: 1; display: flex; flex-direction: column; min-width: 0; }
 
         .topnav {
           display:flex;
@@ -414,7 +485,13 @@ export default function MyArtworksPage() {
         }
         .plus{ font-weight:700; font-size:18px; color: #fff !important; }
 
-        /* artwork rows */
+        /* artwork sections */
+        .desktop-rows {
+          display: block;
+        }
+        .mobile-grid {
+          display: none;
+        }
         .artworkRow{
           margin-bottom: 32px;
         }
@@ -471,9 +548,7 @@ export default function MyArtworksPage() {
         }
         
         .cardContainer {
-          display: flex;
-          align-items: center;
-          gap: 10px;
+          display: block;
         }
         
         .viewBtn {
@@ -487,6 +562,7 @@ export default function MyArtworksPage() {
           font-weight: bold;
           cursor: pointer;
           flex-shrink: 0;
+          align-self: center;
         }
 
         .scrollBtn{
@@ -631,24 +707,82 @@ export default function MyArtworksPage() {
         }
 
         /* responsive */
+        @media (max-width: 1200px) {
+          .main {
+            padding: 20px 24px;
+          }
+        }
+        
+        @media (max-width: 1024px) {
+          .main {
+            padding: 20px 16px 60px;
+          }
+        }
+        
         @media (max-width: 768px){
-          .card{ min-width: 200px; width: 200px; height: 160px; }
+          .centerlinks { display: none; }
+          .desktop-rows {
+            display: none;
+          }
+          .mobile-grid {
+            display: block;
+          }
+          .scrollContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+          .artworkGrid{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            overflow-x: visible;
+            width: 100%;
+          }
+          .card{ 
+            min-width: auto;
+            width: 100%;
+            height: 160px; 
+          }
           .media{ height: 160px; }
+          .viewBtn {
+            transform: rotate(90deg);
+            margin-top: 15px;
+          }
           h1{ font-size: 32px; }
           .pageHeader{ flex-direction: column; }
           .uploadBtn{ width: 100%; justify-content: center; }
           .topnav{ padding: 12px 16px; }
-          .centerlinks{ gap: 16px; }
         }
-        @media (max-width: 768px){
-          .centerlinks{ display: none; }
+        
+        @media (max-width: 740px){
+          .main{ padding: 0 14px 60px; }
         }
         
         @media (max-width: 480px){
-          .card{ min-width: 180px; width: 180px; height: 140px; }
+          .artworkGrid{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            overflow-x: visible;
+          }
+          .card{ 
+            min-width: auto;
+            width: 100%;
+            height: 140px; 
+          }
           .media{ height: 140px; }
+          .media img {
+            object-position: center bottom !important;
+          }
+          .viewBtn {
+            transform: rotate(90deg);
+            width: 30px;
+            height: 30px;
+            font-size: 14px;
+            margin-top: 10px;
+          }
           h1{ font-size: 24px; }
-          .main{ padding: 24px 16px 60px; }
           .topnav{ flex-wrap: wrap; gap: 12px; }
           .pagination{ gap: 4px; }
           .pageNum{ width: 36px; height: 36px; font-size: 12px; }
