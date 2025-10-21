@@ -244,6 +244,13 @@ const DashboardSidebar: React.FC<SidebarProps> = ({ activePage = "Home" }) => {
             padding: 4px 6px !important;
             font-size: 10px !important;
             gap: 6px !important;
+            flex-direction: column !important;
+            text-align: center !important;
+          }
+          
+          .item span:not(.icon) {
+            font-size: 8px !important;
+            line-height: 1.2 !important;
           }
           
           .icon {
@@ -254,6 +261,13 @@ const DashboardSidebar: React.FC<SidebarProps> = ({ activePage = "Home" }) => {
             padding: 3px 4px !important;
             font-size: 9px !important;
             gap: 4px !important;
+            flex-direction: column !important;
+            text-align: center !important;
+          }
+          
+          .smallItem span:not(.icon) {
+            font-size: 7px !important;
+            line-height: 1.2 !important;
           }
           
           .bottom {

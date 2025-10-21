@@ -2,6 +2,7 @@
 
 import Head from "next/head";
 import Image from "next/image";
+import Link from "next/link";
 import React, { useRef, useState, useEffect } from "react";
 import DashboardSidebar from "../../components/DashboardSidebar";
 import ThemeToggle from "../../components/ThemeToggle";
@@ -132,10 +133,10 @@ export default function ProfileSettingsPage() {
         </div>
 
         <nav className="centerlinks" aria-label="Main navigation">
-          <a href="/" className="nav-link">Home</a>
-          <a href="/collections" className="nav-link">Explore</a>
-          <a href="/dashboard" className="nav-link">Dashboard</a>
-          <a href="/my-artworks" className="nav-link">My Artworks</a>
+          <Link href="/" className="nav-link">Home</Link>
+          <Link href="/collections" className="nav-link">Explore</Link>
+          <Link href="/dashboard" className="nav-link">Dashboard</Link>
+          <Link href="/my-artworks" className="nav-link">My Artworks</Link>
         </nav>
 
         <div className="right">

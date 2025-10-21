@@ -92,10 +92,10 @@ export default function DashboardPage() {
           <header className="topnav" role="banner">
             <div className="brand"></div>
             <nav className="centerlinks" aria-label="Main">
-              <a href="/" className="nav-link">Home</a>
-              <a href="/collections" className="nav-link">Explore</a>
-              <a href="/dashboard" className="nav-link">Dashboard</a>
-              <a href="/my-artworks" className="nav-link">My Artworks</a>
+              <Link href="/" className="nav-link">Home</Link>
+              <Link href="/collections" className="nav-link">Explore</Link>
+              <Link href="/dashboard" className="nav-link">Dashboard</Link>
+              <Link href="/my-artworks" className="nav-link">My Artworks</Link>
             </nav>
             <div className="right">
               <div className="hidden md:flex items-center gap-3">
