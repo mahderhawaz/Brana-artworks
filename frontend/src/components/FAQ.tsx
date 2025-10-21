@@ -103,7 +103,9 @@ export default function FAQ() {
                 <h3 className={styles.h}>
                   <button
                     id={btnId}
-                    ref={(el) => (headingsRef.current[i] = el)}
+                    ref={(el) => {
+                      headingsRef.current[i] = el;
+                    }}
                     aria-controls={panelId}
                     aria-expanded={isOpen}
                     className={`${styles.button} ${isOpen ? styles.open : ""}`}
