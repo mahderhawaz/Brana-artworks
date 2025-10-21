@@ -98,22 +98,39 @@ export default function DashboardPage() {
               <a href="/my-artworks" className="nav-link">My Artworks</a>
             </nav>
             <div className="right">
-              <ThemeToggle />
-              <button className="iconBtn" aria-label="Notifications">🔔</button>
-              <div className="avatar">
-                {user?.profilePicture ? (
-                  <Image 
-                    src={user.profilePicture} 
-                    alt="User" 
-                    width={36} 
-                    height={36} 
-                    style={{ borderRadius: '50%', objectFit: 'cover' }}
-                  />
-                ) : (
-                  <DefaultAvatar size={36} />
-                )}
+              <div className="hidden md:flex items-center gap-3">
+                <ThemeToggle />
+                <button className="iconBtn" aria-label="Notifications">🔔</button>
+                <div className="avatar">
+                  {user?.profilePicture ? (
+                    <Image 
+                      src={user.profilePicture} 
+                      alt="User" 
+                      width={36} 
+                      height={36} 
+                      style={{ borderRadius: '50%', objectFit: 'cover' }}
+                    />
+                  ) : (
+                    <DefaultAvatar size={36} />
+                  )}
+                </div>
               </div>
-              <MobileNav isDashboard={true} />
+              <div className="flex md:hidden items-center gap-2">
+                <div className="avatar">
+                  {user?.profilePicture ? (
+                    <Image 
+                      src={user.profilePicture} 
+                      alt="User" 
+                      width={32} 
+                      height={32} 
+                      style={{ borderRadius: '50%', objectFit: 'cover' }}
+                    />
+                  ) : (
+                    <DefaultAvatar size={32} />
+                  )}
+                </div>
+                <MobileNav isDashboard={true} />
+              </div>
             </div>
           </header>
           
@@ -181,7 +198,7 @@ export default function DashboardPage() {
 
       <style jsx global>{`
         body {
-          background: #fff;
+          background: #fbfaf8 !important;
           color: #a65b2b;
           transition: background-color 0.3s ease, color 0.3s ease;
         }
@@ -189,6 +206,14 @@ export default function DashboardPage() {
         :root.dark body {
           background: #3d2914 !important;
           color: white !important;
+        }
+        
+        .main {
+          background: #fbfaf8 !important;
+        }
+        
+        .contentArea {
+          background: #fbfaf8 !important;
         }
         
         :root.dark .main {
@@ -541,9 +566,6 @@ export default function DashboardPage() {
         }
         
         @media (max-width: 1024px) {
-          .page {
-            flex-direction: column;
-          }
           .grid, .loadingGrid {
             grid-template-columns: repeat(3, 1fr);
           }
@@ -595,7 +617,7 @@ export default function DashboardPage() {
         
         @media (max-width: 480px) {
           .main {
-            padding: 8px 12px;
+            padding: 0 14px 60px;
           }
           h1 {
             font-size: 20px;
