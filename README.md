@@ -82,7 +82,7 @@ cp .env.example .env
 # Database
 MONGODB_URI=mongodb://localhost:27017/brana-arts
 # or for MongoDB Atlas:
-# MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/brana-arts
+# MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<database>
 
 # JWT Configuration
 JWT_SECRET=your-super-secret-jwt-key-here
@@ -174,8 +174,8 @@ The frontend will run on `http://localhost:3000`
 2. **Connect GitHub repository**
 3. **Set environment variables**:
    ```
-   MONGODB_URI=your-mongodb-connection-string
-   JWT_SECRET=your-jwt-secret
+   MONGODB_URI=<your-mongodb-connection-string>
+   JWT_SECRET=<your-jwt-secret>
    PORT=10000
    NODE_ENV=production
    ```
