@@ -51,7 +51,7 @@ export default function UploadArtworkPage() {
     if (!title.trim()) e.title = "Artwork title is required.";
     if (!description.trim()) e.description = "Please add a description.";
     if (!category) e.category = "Please select a category.";
-    if (!price || Number.isNaN(Number(price))) e.price = "Enter a valid price.";
+    if (!price || price.trim() === '' || Number.isNaN(Number(price.trim())) || Number(price.trim()) <= 0) e.price = "Enter a valid price greater than 0.";
     if (!file) e.file = "Please upload an artwork image (JPG, PNG, GIF up to 10MB).";
     return e;
   }
@@ -133,7 +133,8 @@ export default function UploadArtworkPage() {
       }
       
       const { api } = await import('../../lib/api');
-      const priceValue = price ? parseFloat(price) : undefined;
+      const priceValue = price && price.trim() ? parseFloat(price.trim()) : 0;
+      console.log('💰 Price value being sent:', priceValue);
       await api.createArtwork(title, description, imageUrl, priceValue);
 
       // Trigger refresh of my-artworks page

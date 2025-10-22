@@ -128,10 +128,14 @@ class ApiClient {
 
   async createArtwork(title: string, description: string, imageUrl: string, price?: number): Promise<Artwork> {
     const payload: any = { title, description, imageUrl };
-    if (price && price > 0) {
-      payload.price = price;
+    if (price !== undefined && price > 0) {
+      payload.price = Number(price);
       payload.forSale = true;
+    } else {
+      payload.forSale = false;
+      payload.price = 0;
     }
+    console.log('📦 Creating artwork with payload:', payload);
     return this.request<Artwork>(
       `/artworks`,
       {
