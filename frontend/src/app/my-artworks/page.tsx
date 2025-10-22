@@ -207,7 +207,7 @@ export default function MyArtworksPage() {
           <div className="pageHeader">
             <div>
               <h1>My Artworks</h1>
-              <p className="subtitle">Curated collection of Ethiopian artisan crafts</p>
+              <p className="subtitle">These are sample images. Upload your work and it will be displayed here.</p>
             </div>
             <a href="/upload-artwork" className="uploadBtn" aria-label="Upload new artwork">
               <span className="plus">+</span> Upload New Artwork
@@ -227,7 +227,7 @@ export default function MyArtworksPage() {
                   <div className="scrollContainer">
                     <div className={`artworkGrid artworkGrid-${rowIndex}`}>
                       {row.map((a) => (
-                        <div className="cardContainer" key={a.title}>
+                        <div className="cardContainer" key={a._id}>
                           <article className="card">
                             <div className="media">
                               {a.src && a.src.startsWith('data:') ? (
@@ -272,7 +272,7 @@ export default function MyArtworksPage() {
               <div className="scrollContainer">
                 <div className="artworkGrid">
                   {artworkRows.flat().map((a) => (
-                    <div className="cardContainer" key={a.title}>
+                    <div className="cardContainer" key={a._id}>
                       <article className="card">
                         <div className="media">
                           {a.src && a.src.startsWith('data:') ? (
@@ -325,6 +325,7 @@ export default function MyArtworksPage() {
             price: parseInt(paymentArtwork.price?.replace('$', '') || '0'),
             artist: { username: paymentArtwork.artist?.username || user?.username || 'Unknown' }
           }}
+          user={user}
           onClose={() => setPaymentArtwork(null)}
           onSuccess={handlePaymentSuccess}
         />

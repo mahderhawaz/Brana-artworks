@@ -37,8 +37,12 @@ export default function PurchasesPage() {
   const total = ALL_PURCHASES.length;
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
+  const [purchases, setPurchases] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     loadUserProfile();
+    loadPurchases();
   }, []);
 
   async function loadUserProfile() {
@@ -50,17 +54,28 @@ export default function PurchasesPage() {
     }
   }
 
+  async function loadPurchases() {
+    try {
+      const userPurchases = await api.getUserPurchases();
+      setPurchases(userPurchases);
+    } catch (error) {
+      console.error('Failed to load purchases:', error);
+      setPurchases([]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return ALL_PURCHASES;
-    return ALL_PURCHASES.filter(
+    if (!q) return purchases;
+    return purchases.filter(
       (p) =>
-        p.artwork.toLowerCase().includes(q) ||
-        p.seller.toLowerCase().includes(q) ||
-        p.date.toLowerCase().includes(q) ||
-        p.details.toLowerCase().includes(q)
+        p.artwork?.title?.toLowerCase().includes(q) ||
+        p.seller?.username?.toLowerCase().includes(q) ||
+        p.createdAt?.toLowerCase().includes(q)
     );
-  }, [query]);
+  }, [query, purchases]);
 
   const pageItems = filtered.slice((page - 1) * pageSize, page * pageSize);
 
@@ -182,34 +197,41 @@ export default function PurchasesPage() {
             </div>
 
             <div className="tableBody" role="rowgroup">
-              {pageItems.length === 0 ? (
+              {loading ? (
                 <div className="row empty" role="row">
                   <div className="cell" style={{ gridColumn: "1 / -1", padding: 24, textAlign: "center" }}>
-                    No purchases found.
+                    Loading purchases...
+                  </div>
+                </div>
+              ) : pageItems.length === 0 ? (
+                <div className="row empty" role="row">
+                  <div className="cell" style={{ gridColumn: "1 / -1", padding: 24, textAlign: "center" }}>
+                    No purchases yet. Buy some artworks to see them here!
                   </div>
                 </div>
               ) : (
                 pageItems.map((p) => (
-                  <div className="row" role="row" key={p.id}>
+                  <div className="row" role="row" key={p._id}>
                     <div className="cell artworkCell">
                       <div className="thumb">
-                        <Image src={p.thumb} alt={p.artwork} width={56} height={56} />
+                        <Image src={p.artwork?.imageUrl || '/cards/paint.jpg'} alt={p.artwork?.title || 'Artwork'} width={56} height={56} />
+                        <div className="purchaseIcon">🛒</div>
                       </div>
-                      <div className="artworkLabel">{p.artwork}</div>
+                      <div className="artworkLabel">{p.artwork?.title || 'Unknown Artwork'}</div>
                     </div>
 
                     <div className="cell">
-                      <div className="detailTitle">{p.details}</div>
+                      <div className="detailTitle">Digital Art</div>
                     </div>
 
-                    <div className="cell">{p.price}</div>
+                    <div className="cell">${p.price || '0'}</div>
 
-                    <div className="cell">{p.seller}</div>
+                    <div className="cell">{p.seller?.username || 'Unknown'}</div>
 
-                    <div className="cell">{p.date}</div>
+                    <div className="cell">{new Date(p.createdAt).toLocaleDateString()}</div>
 
                     <div className="cell actionCol">
-                      <a className="detailsLink" href="#" aria-label={`View details for ${p.artwork}`}>View Details</a>
+                      <a className="detailsLink" href="#" aria-label={`View details for ${p.artwork?.title}`}>View Details</a>
                     </div>
                   </div>
                 ))
@@ -475,7 +497,8 @@ export default function PurchasesPage() {
 
         .cell { padding: 0 12px; display:flex; align-items:center; gap:12px; color: #a65b2b !important; }
         .artworkCell { display:flex; align-items:center; gap:12px; }
-        .thumb { width:56px; height:56px; border-radius:8px; overflow:hidden; background:#efece9; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+        .thumb { width:56px; height:56px; border-radius:8px; overflow:hidden; background:#efece9; flex-shrink:0; display:flex; align-items:center; justify-content:center; position: relative; }
+        .purchaseIcon { position: absolute; top: -4px; right: -4px; background: #22c55e; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 10px; }
         .artworkLabel { font-weight:700; color: #a65b2b !important; }
 
         .detailTitle { color: var(--muted); font-weight:600; }

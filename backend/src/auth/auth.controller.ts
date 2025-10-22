@@ -14,16 +14,26 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() registerDto: RegisterDto) {
-    const { email, password, username } = registerDto;
-    return this.authService.register(email, password, username);
+    try {
+      const { email, password, username } = registerDto;
+      return this.authService.register(email, password, username);
+    } catch (error) {
+      console.error('Registration error:', error);
+      throw error;
+    }
   }
 
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
-    console.log('🔑 Login endpoint hit:', loginDto);
-    const { email, password } = loginDto;
-    console.log('✅ Calling auth service login');
-    return this.authService.login(email, password);
+    try {
+      console.log('🔑 Login endpoint hit:', loginDto);
+      const { email, password } = loginDto;
+      console.log('✅ Calling auth service login');
+      return this.authService.login(email, password);
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error;
+    }
   }
 
   @Post('forgot-password')

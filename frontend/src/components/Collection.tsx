@@ -44,7 +44,7 @@ const Collection: React.FC = () => {
   return (
     <section className={`${styles.section} py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8`} aria-labelledby="collection-heading">
       <div className={`${styles.container} max-w-6xl mx-auto`}>
-        <h2 id="collection-heading" className={`${styles.heading} text-2xl sm:text-3xl lg:text-4xl text-center mb-8 sm:mb-12 animate-fadeInUp`}>
+        <h2 id="collection-heading" className={`${styles.heading} text-2xl sm:text-3xl lg:text-4xl text-center mb-8 sm:mb-12`}>
           Explore Our Collection
         </h2>
 

@@ -214,17 +214,7 @@ export default function NewArrivals() {
                       {artwork.sold && (
                         <div className="soldTag">SOLD</div>
                       )}
-                      {!artwork.sold && user && !isOwner(artwork) && (
-                        <button 
-                          className="buyOverlayBtn"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleBuyClick(artwork);
-                          }}
-                        >
-                          Buy Here
-                        </button>
-                      )}
+
                     </div>
                     
                     <div className="content">
@@ -284,6 +274,7 @@ export default function NewArrivals() {
             price: paymentArtwork.price || 0,
             artist: { username: paymentArtwork.artist.username }
           }}
+          user={user}
           onClose={() => setPaymentArtwork(null)}
           onSuccess={handlePaymentSuccess}
         />

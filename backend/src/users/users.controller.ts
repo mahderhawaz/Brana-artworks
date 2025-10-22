@@ -8,14 +8,23 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@Req() req) {
-    // req.user is populated by JwtStrategy validate() method
-    return this.usersService.findById(req.user.userId);
+  async getProfile(@Req() req) {
+    try {
+      return this.usersService.findById(req.user.userId);
+    } catch (error) {
+      console.error('Get profile error:', error);
+      throw error;
+    }
   }
 
   @UseGuards(JwtAuthGuard)
   @Put('profile')
-  updateProfile(@Req() req, @Body() updateData: any) {
-    return this.usersService.updateProfile(req.user.userId, updateData);
+  async updateProfile(@Req() req, @Body() updateData: any) {
+    try {
+      return this.usersService.updateProfile(req.user.userId, updateData);
+    } catch (error) {
+      console.error('Update profile error:', error);
+      throw error;
+    }
   }
 }

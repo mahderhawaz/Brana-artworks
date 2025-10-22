@@ -13,7 +13,7 @@ export class AuthService {
   async register(email: string, password: string, username: string) {
     try {
       console.log('🔐 Hashing password for registration');
-      const hashedPassword = await bcrypt.hash(password, 12);
+      const hashedPassword = await bcrypt.hash(password, 10);
       const userData = { name: username, email, password: hashedPassword };
       console.log('👤 Creating user with data:', { name: username, email });
       const created = await this.usersService.create(userData);

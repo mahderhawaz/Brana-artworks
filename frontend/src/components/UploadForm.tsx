@@ -11,6 +11,7 @@ export default function UploadForm({ onSuccess }: UploadFormProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const [price, setPrice] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -19,10 +20,12 @@ export default function UploadForm({ onSuccess }: UploadFormProps) {
 
     setLoading(true);
     try {
-      await api.createArtwork(title, description, imageUrl);
+      const priceValue = price ? parseFloat(price) : undefined;
+      await api.createArtwork(title, description, imageUrl, priceValue);
       setTitle('');
       setDescription('');
       setImageUrl('');
+      setPrice('');
       onSuccess();
     } catch (error) {
       console.error('Failed to upload artwork:', error);
@@ -69,6 +72,19 @@ export default function UploadForm({ onSuccess }: UploadFormProps) {
             className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
             placeholder="https://example.com/image.jpg"
             required
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-2">Price (optional)</label>
+          <input
+            type="number"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter price in USD (leave empty if not for sale)"
+            min="0"
+            step="0.01"
           />
         </div>
 

@@ -8,13 +8,30 @@ export class ArtworksController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@Body() body: { title: string; description: string; imageUrl: string }, @Request() req) {
-    return this.artworksService.create(body.title, body.description, body.imageUrl, req.user.userId);
+  async create(@Body() body: { title: string; description: string; imageUrl: string; price?: number }, @Request() req) {
+    return this.artworksService.create(body.title, body.description, body.imageUrl, req.user.userId, body.price);
   }
 
   @Get()
   async findAll() {
     return this.artworksService.findAll();
+  }
+
+  @Get('for-sale')
+  async getForSale() {
+    return this.artworksService.getForSale();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('my-purchases')
+  async getMyPurchases(@Request() req) {
+    return this.artworksService.getUserPurchases(req.user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('my-sales')
+  async getMySales(@Request() req) {
+    return this.artworksService.getUserSales(req.user.userId);
   }
 
   @Get(':id')
@@ -50,22 +67,5 @@ export class ArtworksController {
   @Post(':id/buy')
   async buyArtwork(@Param('id') id: string, @Request() req) {
     return this.artworksService.buyArtwork(id, req.user.userId);
-  }
-
-  @Get('for-sale')
-  async getForSale() {
-    return this.artworksService.getForSale();
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('my-purchases')
-  async getMyPurchases(@Request() req) {
-    return this.artworksService.getUserPurchases(req.user.userId);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('my-sales')
-  async getMySales(@Request() req) {
-    return this.artworksService.getUserSales(req.user.userId);
   }
 }

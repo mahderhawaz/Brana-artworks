@@ -63,12 +63,6 @@ export default function DashboardPage() {
       try {
         const userData = await api.getProfile();
         setUser(userData);
-        
-        const userArtworks = await api.getUserArtworks();
-        const recent = userArtworks
-          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-          .slice(0, 4);
-        setRecentArtworks(recent);
       } catch (error) {
         console.error('Failed to fetch data:', error);
       } finally {
@@ -151,44 +145,19 @@ export default function DashboardPage() {
 
                 <section className="artSection" aria-label="My Recent Artworks">
                   <div className="headerRow">
-                    <h3 className="sectionTitle">My Recent Artworks</h3>
+                    <h3 className="sectionTitle">Featured Artworks</h3>
                     <div className="actionButtons">
                       <a href="/upload-artwork" className="upload">+ Upload New Artwork</a>
                     </div>
                   </div>
-
-                  {recentArtworks.length > 0 ? (
-                <div className="grid">
-                  {recentArtworks.map((artwork) => (
-                    <article key={artwork._id} className="artCard">
-                      <div className="media">
-                        <img 
-                          src={artwork.imageUrl} 
-                          alt={artwork.title} 
-                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                        />
-                      </div>
-                      <div className="info">
-                        <h3 className="artTitle">{artwork.title}</h3>
-                        <div className="row">
-                          <div className="price">
-                            {artwork.forSale ? `$${artwork.price}` : 'Not for sale'}
-                          </div>
-                          <div className={`badge ${artwork.sold ? 'sold' : artwork.forSale ? 'forSale' : 'notForSale'}`}>
-                            {artwork.sold ? 'Sold' : artwork.forSale ? 'For Sale' : 'Private'}
-                          </div>
-                        </div>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-                  ) : (
-                    <div className="grid">
-                      {demoArt.map((art) => (
-                        <ArtCard key={art.title} {...art} />
-                      ))}
-                    </div>
-                  )}
+                  <div className="staticNotice">
+                    <p>This overview displays curated artworks for all users. Your uploaded works will appear in <strong>New Arrivals</strong>, <strong>My Artworks</strong>, and other personalized sections.</p>
+                  </div>
+                  <div className="grid">
+                    {demoArt.map((art) => (
+                      <ArtCard key={art.title} {...art} />
+                    ))}
+                  </div>
                 </section>
               </>
             )}
@@ -390,6 +359,39 @@ export default function DashboardPage() {
         
         :root.dark .sectionTitle {
           color: white !important;
+        }
+        
+        .staticNotice {
+          background: rgba(166, 91, 43, 0.05);
+          border-left: 4px solid #a65b2b;
+          padding: 16px 20px;
+          margin: 12px 0 20px;
+          border-radius: 0 8px 8px 0;
+        }
+        
+        .staticNotice p {
+          color: #6b625d;
+          font-size: 14px;
+          margin: 0;
+          line-height: 1.5;
+        }
+        
+        .staticNotice strong {
+          color: #a65b2b;
+          font-weight: 600;
+        }
+        
+        :root.dark .staticNotice {
+          background: rgba(166, 91, 43, 0.1);
+          border-left-color: #a65b2b;
+        }
+        
+        :root.dark .staticNotice p {
+          color: #ccc !important;
+        }
+        
+        :root.dark .staticNotice strong {
+          color: #d4a574 !important;
         }
         
         .actionButtons {

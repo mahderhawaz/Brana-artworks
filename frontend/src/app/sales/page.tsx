@@ -35,8 +35,12 @@ export default function SalesPage() {
   const [user, setUser] = useState<User | null>(null);
   const pageSize = 5;
 
+  const [sales, setSales] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     loadUserProfile();
+    loadSales();
   }, []);
 
   async function loadUserProfile() {
@@ -48,17 +52,29 @@ export default function SalesPage() {
     }
   }
 
+  async function loadSales() {
+    try {
+      // Show user's artworks that are for sale or sold
+      const userArtworks = await api.getUserArtworks();
+      const salesArtworks = userArtworks.filter(artwork => artwork.forSale || artwork.sold);
+      setSales(salesArtworks);
+    } catch (error) {
+      console.error('Failed to load sales:', error);
+      setSales([]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return ALL_SALES;
-    return ALL_SALES.filter(
+    if (!q) return sales;
+    return sales.filter(
       (s) =>
-        s.buyer.toLowerCase().includes(q) ||
-        s.artwork.toLowerCase().includes(q) ||
-        s.date.toLowerCase().includes(q) ||
-        s.amount.toLowerCase().includes(q)
+        s.title?.toLowerCase().includes(q) ||
+        s.createdAt?.toLowerCase().includes(q)
     );
-  }, [query]);
+  }, [query, sales]);
 
   const total = filtered.length;
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
@@ -186,28 +202,36 @@ export default function SalesPage() {
             </div>
 
             <div className="tableBody" role="rowgroup">
-              {pageItems.length === 0 ? (
+              {loading ? (
                 <div className="row empty" role="row">
                   <div className="cell" style={{ gridColumn: "1 / -1", padding: 24, textAlign: "center" }}>
-                    No results found.
+                    Loading sales...
+                  </div>
+                </div>
+              ) : pageItems.length === 0 ? (
+                <div className="row empty" role="row">
+                  <div className="cell" style={{ gridColumn: "1 / -1", padding: 24, textAlign: "center" }}>
+                    No sales yet. Upload artworks with prices to start selling!
                   </div>
                 </div>
               ) : (
                 pageItems.map((s) => (
-                  <div className="row" role="row" key={s.id}>
+                  <div className="row" role="row" key={s._id}>
                     <div className="cell artworkCell">
                       <div className="thumb">
-                        <Image src={s.artworkSrc} alt={s.artwork} width={48} height={48} />
+                        <Image src={s.imageUrl || '/cards/paint.jpg'} alt={s.title || 'Artwork'} width={48} height={48} />
+                        {s.sold && <div className="soldIcon">SOLD</div>}
+                        {s.forSale && !s.sold && <div className="forSaleIcon">FOR SALE</div>}
                       </div>
-                      <div className="artworkLabel">{s.artwork}</div>
+                      <div className="artworkLabel">{s.title || 'Unknown Artwork'}</div>
                     </div>
 
-                    <div className="cell">{s.buyer}</div>
-                    <div className="cell">{s.date}</div>
-                    <div className="cell">{s.amount}</div>
+                    <div className="cell">{s.sold ? 'Buyer Name' : 'Available'}</div>
+                    <div className="cell">{new Date(s.createdAt).toLocaleDateString()}</div>
+                    <div className="cell">${s.price || '0'}</div>
                     <div className="cell">
-                      <span className={`badge ${s.status === "Completed" ? "completed" : s.status === "Pending" ? "pending" : "cancelled"}`}>
-                        {s.status}
+                      <span className={`badge ${s.sold ? 'completed' : 'pending'}`}>
+                        {s.sold ? 'Sold' : 'For Sale'}
                       </span>
                     </div>
                   </div>
@@ -498,7 +522,9 @@ export default function SalesPage() {
 
         .cell { padding: 0 12px; display:flex; align-items:center; gap:12px; color: #a65b2b !important; }
         .artworkCell { display:flex; align-items:center; gap:12px; }
-        .thumb { width:48px; height:48px; border-radius:8px; overflow:hidden; background:#efece9; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+        .thumb { width:48px; height:48px; border-radius:8px; overflow:hidden; background:#efece9; flex-shrink:0; display:flex; align-items:center; justify-content:center; position: relative; }
+        .soldIcon { position: absolute; top: -4px; right: -4px; background: #ef4444; color: white; border-radius: 4px; padding: 2px 4px; font-size: 8px; font-weight: 700; }
+        .forSaleIcon { position: absolute; top: -4px; right: -4px; background: #22c55e; color: white; border-radius: 4px; padding: 2px 4px; font-size: 8px; font-weight: 700; }
         .artworkLabel { font-weight:600; color: #a65b2b !important; }
 
         .badge { padding:6px 10px; border-radius:999px; font-weight:600; font-size:13px; display:inline-block; }

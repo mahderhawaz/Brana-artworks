@@ -11,9 +11,16 @@ export class ArtworksService {
     @InjectModel(Order.name) private orderModel: Model<Order>
   ) {}
 
-  async create(title: string, description: string, imageUrl: string, artistId: string) {
+  async create(title: string, description: string, imageUrl: string, artistId: string, price?: number) {
     try {
-      const artwork = new this.artworkModel({ title, description, imageUrl, artist: artistId });
+      const artworkData: any = { title, description, imageUrl, artist: artistId };
+      
+      if (price !== undefined && price > 0) {
+        artworkData.price = price;
+        artworkData.forSale = true;
+      }
+      
+      const artwork = new this.artworkModel(artworkData);
       return await artwork.save();
     } catch (error: any) {
       throw new InternalServerErrorException('Failed to create artwork');

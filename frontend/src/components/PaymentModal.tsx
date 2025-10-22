@@ -8,11 +8,12 @@ interface PaymentModalProps {
     price: number;
     artist: { username: string };
   };
+  user: { email: string } | null;
   onClose: () => void;
   onSuccess: () => void;
 }
 
-export default function PaymentModal({ artwork, onClose, onSuccess }: PaymentModalProps) {
+export default function PaymentModal({ artwork, user, onClose, onSuccess }: PaymentModalProps) {
   const [formData, setFormData] = useState({
     cardNumber: '',
     expiryDate: '',
@@ -21,9 +22,18 @@ export default function PaymentModal({ artwork, onClose, onSuccess }: PaymentMod
     email: '',
   });
   const [processing, setProcessing] = useState(false);
+  const [emailError, setEmailError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setEmailError('');
+    
+    // Validate email matches logged-in user
+    if (user && formData.email.toLowerCase() !== user.email.toLowerCase()) {
+      setEmailError('Wrong email. Please use your registered email address.');
+      return;
+    }
+    
     setProcessing(true);
     
     // Simulate payment processing
@@ -62,7 +72,9 @@ export default function PaymentModal({ artwork, onClose, onSuccess }: PaymentMod
               onChange={handleInputChange}
               required
               placeholder="your@email.com"
+              className={emailError ? 'error' : ''}
             />
+            {emailError && <div className="error-message">{emailError}</div>}
           </div>
 
           <div className="form-group">
@@ -236,6 +248,16 @@ export default function PaymentModal({ artwork, onClose, onSuccess }: PaymentMod
         input:focus {
           outline: none;
           border-color: #a65b2b;
+        }
+
+        input.error {
+          border-color: #e74c3c;
+        }
+
+        .error-message {
+          color: #e74c3c;
+          font-size: 12px;
+          margin-top: 4px;
         }
 
         .pay-btn {

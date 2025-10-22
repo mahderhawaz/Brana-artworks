@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://brana-artworks-1.onrender.com';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:10000';
 
 console.log('🔗 API Base URL:', API_BASE_URL);
 
@@ -130,10 +130,6 @@ class ApiClient {
     const payload: any = { title, description, imageUrl };
     if (price !== undefined && price > 0) {
       payload.price = Number(price);
-      payload.forSale = true;
-    } else {
-      payload.forSale = false;
-      payload.price = 0;
     }
     console.log('📦 Creating artwork with payload:', payload);
     return this.request<Artwork>(
@@ -192,6 +188,14 @@ class ApiClient {
       console.error('Error fetching user artworks:', error);
       return [];
     }
+  }
+
+  async getUserPurchases(): Promise<any[]> {
+    return this.request<any[]>(`/artworks/my-purchases`, { method: 'GET' }, true);
+  }
+
+  async getUserSales(): Promise<any[]> {
+    return this.request<any[]>(`/artworks/my-sales`, { method: 'GET' }, true);
   }
 
 
